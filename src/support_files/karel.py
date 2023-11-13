@@ -2,15 +2,16 @@ from game import *
 
 class Karel:
     x = 0
-    y = Game.size - 1
+    y = Game.size - 1 # 19
 
     home_x = 0
     home_y = Game.size - 1
 
-    # 0 = up            [North]
-    # 1 = left  (<-)    [WEST]
-    # 2 = down          [SOUTH]
-    # 3 = right (->)    [EAST]
+    
+    # 0 = up            [North]     Sever 
+    # 1 = left  (<-)    [WEST]      Západ
+    # 2 = down          [SOUTH]     Jih
+    # 3 = right (->)    [EAST]      Východ
     dir = 3
 
     def turn_left():

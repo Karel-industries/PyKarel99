@@ -89,34 +89,34 @@ def handle_socket(data):
     if data == "step":
         return "ok" if      Functions.Step()             else "error"
     
-    elif data == "left":
+    elif data == "turn-left":
         return "ok" if      Functions.Turn_left()        else "error"
     
-    elif data == "add":
+    elif data == "add-flag":
         return "ok" if      Functions.Add_flag()         else "error"
     
-    elif data == "remove":
+    elif data == "remove-flag":
         return "ok" if      Functions.Remove_flag()      else "error"
     
-    elif data == "wall":
+    elif data == "is-wall":
         return "yes" if     Functions.Is_wall_in_front() else "no"
     
-    elif data == "flag":
+    elif data == "is-flag":
         return "yes" if     Functions.Is_flag()          else "no"
     
-    elif data == "home":
+    elif data == "at-home":
         return "yes" if     Functions.At_home()          else "no"
     
-    elif data == "north":
+    elif data == "facing-north":
         return "yes" if     Functions.Facing_north()     else "no"
     
-    elif data == "south":
+    elif data == "facing-south":
         return "yes" if     Functions.Facing_south()     else "no"
     
-    elif data == "east":
+    elif data == "facing-east":
         return "yes" if     Functions.Facing_east()      else "no"
     
-    elif data == "west":
+    elif data == "facing-west":
         return "yes" if     Functions.Facing_west()      else "no"
 
 

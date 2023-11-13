@@ -4,18 +4,44 @@
 ; Slovník projektu Karel 99
 ;
 ; Statistika:
-;   Poèet pøíkazù: 11
+;   Poèet pøíkazù: 15
 ;   Poèet systémových pøíkazù: 10
-;   Poèet uživatelských pøíkazù: 1
+;   Poèet uživatelských pøíkazù: 5
 ;   Poèet prázdných pøíkazù: 0
 
+TEST		; Nový pøíkaz
+   KROK
+   KROK
+   VPRAVO
+   POLOŽ
+   GOTOWALL
+KONEC		; Konec definice pøíkazu TEST
+
+VPRAVO		; Nový pøíkaz
+   OPAKUJ 3-KRÁT
+      VLEVO-VBOK
+   KONEC
+KONEC		; Konec definice pøíkazu VPRAVO
+
+4STEPS		; Nový pøíkaz
+   OPAKUJ 4-KRÁT
+      KROK
+      KROK
+      KROK
+      KROK
+   KONEC
+KONEC		; Konec definice pøíkazu 4STEPS
+
+GOTOWALL		; Nový pøíkaz
+   DOKUD NENÍ ZEÏ
+      KROK
+   KONEC
+KONEC		; Konec definice pøíkazu GOTOWALL
+
 NOVÝ PØÍKAZ		; Nový pøíkaz
-   KROK
-   KROK
-   VLEVO-VBOK
-   KROK
-   KROK
-   KROK
+   ;KDYŽ NENÍ SEVER
+   ;KONEC, JINAK
+   ;KONEC
 KONEC		; Konec definice pøíkazu NOVÝ PØÍKAZ
 
 ; Mìsto projektu Karel 99
@@ -26,9 +52,9 @@ KONEC		; Konec definice pøíkazu NOVÝ PØÍKAZ
 ; Umístìní domova: x, y
 
 Velikost mìsta: 20, 20
-Pozice Karla: 1, 20
+Pozice Karla: 1, 10
 Otoèení Karla: VÝCHOD
-Umístìní domova: 1, 20
+Umístìní domova: 1, 10
 
 ; Definice mìsta:
 ;   .    prázdné místo
@@ -36,6 +62,15 @@ Umístìní domova: 1, 20
 ;   X    zeï
 
 Definice mìsta:
+X...................
+...................1
+...................2
+...................3
+...................4
+...................5
+...................6
+...................7
+...................8
 ....................
 ....................
 ....................
@@ -46,16 +81,7 @@ Definice mìsta:
 ....................
 ....................
 ....................
-....................
-....................
-....................
-....................
-....................
-....................
-....................
-....................
-....................
-....................
+XX..................
 
 ; Konec definice mìsta
 

@@ -1,11 +1,12 @@
 from game import *
+from karel import *
 
 class MapStorage:
     size = Game.size
+    max_flag = 8
 
     map = []
     # E = Empty
-    # F = Flag/Flags
     # W = wall
 
     def init():
@@ -14,7 +15,7 @@ class MapStorage:
             row = []
             for j in range(MapStorage.size):
                 # Append numbers to the row (you can use any values here)
-                row.append("E")
+                row.append("0")
             # Append the row to the array
             MapStorage.map.append(list(row))
 
@@ -26,7 +27,6 @@ class MapStorage:
         return True
 
     def is_wall(pos):
-
         # Everything outside of game field is a wall
         if not MapStorage.valid_pos(pos):
             return True
