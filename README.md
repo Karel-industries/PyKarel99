@@ -5,5 +5,5 @@ Visual Karel 99 written in python
 ```
 git clone https://github.com/C2Coder/PyKarel99.git
 cd src
-python v2.py
+python PyKarel99.py
 ```
