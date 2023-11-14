@@ -10,11 +10,13 @@
 ;   Poèet prázdných pøíkazù: 0
 
 TEST		; Nový pøíkaz
-   KROK
-   KROK
-   VPRAVO
+;   KROK
+   IFTEST
+;   KROK
+;   KROK
+;   VPRAVO
    POLOŽ
-   GOTOWALL
+;   GOTOWALL
 KONEC		; Konec definice pøíkazu TEST
 
 VPRAVO		; Nový pøíkaz
@@ -38,10 +40,18 @@ GOTOWALL		; Nový pøíkaz
    KONEC
 KONEC		; Konec definice pøíkazu GOTOWALL
 
-NOVÝ PØÍKAZ		; Nový pøíkaz
-   ;KDYŽ NENÍ SEVER
-   ;KONEC, JINAK
-   ;KONEC
+IFTEST		; Nový pøíkaz
+   KDYŽ JE ZEÏ
+      VLEVO-VBOK
+      VLEVO-VBOK
+      VLEVO-VBOK
+      VLEVO-VBOK
+   KONEC, JINAK
+      KROK
+      KROK
+      KROK
+      KROK
+   KONEC
 KONEC		; Konec definice pøíkazu NOVÝ PØÍKAZ
 
 ; Mìsto projektu Karel 99
@@ -70,8 +80,8 @@ X...................
 ...................5
 ...................6
 ...................7
-...................8
-....................
+.X.................8
+.X..................
 ....................
 ....................
 ....................

@@ -1,19 +1,161 @@
-import sys
-
-sys.path.append("support_files")
-from support_files.map import *
-from support_files.karel import *
-from support_files.game import *
-from support_files.functions import *
 import pygame
-from pprint import pprint
 import time
+import threading
+import os
+## CONFIG ##
 
 flags_are_numbers = True
+interval = 250 # ms
 
-code = []
+## END OF CONFIG ##
 
-code_function_definitions = {}  # The commands under the function
+
+class Game:
+    size = 20
+    running = True
+
+
+class Karel:
+    x = 0
+    y = Game.size - 1  # 19
+
+    home_x = 0
+    home_y = Game.size - 1
+
+    # 0 = up            [North]     Sever
+    # 1 = left  (<-)    [WEST]      Západ
+    # 2 = down          [SOUTH]     Jih
+    # 3 = right (->)    [EAST]      Východ
+    dir = 3
+
+    def turn_left():
+        Karel.dir += 1
+        if Karel.dir == 4:
+            Karel.dir = 0
+
+    def step():
+        if Karel.dir == 0:
+            Karel.y -= 1
+        elif Karel.dir == 1:
+            Karel.x -= 1
+        elif Karel.dir == 2:
+            Karel.y += 1
+        elif Karel.dir == 3:
+            Karel.x += 1
+
+        if Karel.x < 0:
+            Karel.x = 0
+        elif Karel.x > Game.size - 1:
+            Karel.x = Game.size - 1
+
+        if Karel.y < 0:
+            Karel.y = 0
+        elif Karel.y > Game.size - 1:
+            Karel.y = Game.size - 1
+
+    def get_pos_in_front():
+        if Karel.dir == 0:
+            return [Karel.x, Karel.y - 1]
+
+        elif Karel.dir == 1:
+            return [Karel.x - 1, Karel.y]
+
+        elif Karel.dir == 2:
+            return [Karel.x, Karel.y + 1]
+
+        elif Karel.dir == 3:
+            return [Karel.x + 1, Karel.y]
+
+
+class MapStorage:
+    size = Game.size
+    max_flag = 8
+
+    map = []
+    # E = Empty
+    # W = wall
+
+    def init():
+        for i in range(MapStorage.size):
+            # Create a new row as a list
+            row = []
+            for j in range(MapStorage.size):
+                # Append numbers to the row (you can use any values here)
+                row.append("0")
+            # Append the row to the array
+            MapStorage.map.append(list(row))
+
+    def valid_pos(pos):
+        if pos[0] < 0 or pos[0] > Game.size - 1:
+            return False
+        if pos[1] < 0 or pos[1] > Game.size - 1:
+            return False
+        return True
+
+    def is_wall(pos):
+        # Everything outside of game field is a wall
+        if not MapStorage.valid_pos(pos):
+            return True
+
+        if MapStorage.map[pos[0]][pos[1]] == "W":
+            return True
+        else:
+            return False
+
+
+class Functions:
+    def Step():  # Krok
+        if MapStorage.is_wall(Karel.get_pos_in_front()):
+            return False
+
+        Karel.step()
+        return True
+
+    def Turn_left():  # Vlevo-vbok
+        Karel.turn_left()
+        return True
+
+    def Place_flag():  # Polož
+        x = Karel.x
+        y = Karel.y
+
+        if MapStorage.map[x][y] == MapStorage.max_flag:
+            return False
+        MapStorage.map[x][y] = str(int(MapStorage.map[x][y]) + 1)
+
+        return True
+
+    def Pick_flag():  # Zvedni
+        x = Karel.x
+        y = Karel.y
+
+        if MapStorage.map[x][y] == "0":
+            return False
+
+        MapStorage.map[x][y] = str(int(MapStorage.map[x][y]) - 1)
+
+        return True
+
+    def Is_wall_in_front():  # Zeď (dokud není zeď)
+        return MapStorage.is_wall(Karel.get_pos_in_front())
+
+    def Is_flag():
+        return not MapStorage.map[Karel.x][Karel.y] in ["0", "W"]
+
+    def At_home():
+        return Karel.home_x == Karel.x and Karel.home_y == Karel.y
+
+    def Facing_north():
+        return Karel.dir == 0
+
+    def Facing_south():
+        return Karel.dir == 2
+
+    def Facing_east():
+        return Karel.dir == 3
+
+    def Facing_west():
+        return Karel.dir == 1
 
 
 class Screen:
@@ -23,6 +165,8 @@ class Screen:
 
 
 class Images:
+    icon = pygame.image.load('assets/icon.png')
+
     wall = pygame.transform.scale(
         pygame.image.load("assets/wall.png"), (Screen.square_size, Screen.square_size)
     )
@@ -129,9 +273,16 @@ class Images:
             ),
         ]
 
+stop_code = False
+
+code = []
+
+code_function_definitions = {}  # The commands under the function
 
 MapStorage.init()
 
+
+pygame.display.set_icon(Images.icon)
 pygame.display.set_caption("PyKarel 99")
 
 if_list = {
@@ -152,22 +303,10 @@ def draw_frame():
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 pygame.quit()
-            elif event.key == pygame.K_w:
-                Functions.Step()
-            elif event.key == pygame.K_a:
-                Functions.Turn_left()
             elif event.key == pygame.K_q:
-                Functions.Pick_flag()
-            elif event.key == pygame.K_e:
-                Functions.Place_flag()
-            elif event.key == pygame.K_r:
-                print(Functions.Is_flag())
-            elif event.key == pygame.K_f:
-                print(Functions.Is_wall_in_front())
-            elif event.key == pygame.K_l:
-                handle_code("test.K99")
+                stop_code = True
     # Clear the screen
-    Screen.screen.fill((0, 0, 0))
+    Screen.screen.fill((200, 200, 200))
 
     # Draw the grid and squares
     for y in range(Game.size):
@@ -208,8 +347,8 @@ def draw_frame():
 def main_loop():
     while Game.running:
         draw_frame()
-
     pygame.quit()
+    exit()
 
 
 def load_code(file_path):
@@ -225,10 +364,9 @@ def load_code(file_path):
     unnewlined_file = []
     for line in uncomented_file:
         unnewlined_file.append(str(line.replace("\n", "").replace("\t", "")))
-    raw_code = unnewlined_file
 
     translated_code = []
-    for line in raw_code:
+    for line in unnewlined_file:
         translated_code.append(
             line.replace("KROK", "STEP")
             .replace("VLEVO-VBOK", "LEFT")
@@ -237,7 +375,8 @@ def load_code(file_path):
             .replace("OPAKUJ", "REPEAT")
             .replace("KRÁT", "TIMES")
             .replace("DOKUD", "UNTIL")
-            .replace("POKUD", "IF")
+            .replace("KDYŽ", "IF")
+            .replace("JINAK", "ELSE")
             .replace("JE", "IS")
             .replace("NENÍ", "ISNOT")
             .replace("ZEĎ", "WALL")
@@ -262,7 +401,10 @@ def load_code(file_path):
             is_new = False
 
         if is_new:
-            function_name = translated_code[i][: translated_code[i].index(";")]
+            if ";" in translated_code[i]:
+                function_name = translated_code[i][: translated_code[i].index(";")]
+            else:
+                function_name = translated_code[i]
             function_definition = []
             for o in range(i + 1, start_config_index):
                 if translated_code[o].startswith("END"):
@@ -273,11 +415,10 @@ def load_code(file_path):
             code_function_definitions[function_name] = function_definition
 
     code = translated_code
-    # pprint(code)
 
 
 def load_data_from_code():
-    global code_functions, code_function_definitions, code
+    global code_function_definitions, code
     first_index = 0
     for line in code:
         if line.startswith("Velikost města"):
@@ -286,24 +427,17 @@ def load_data_from_code():
 
     map_size_raw = code[first_index].replace("Velikost města: ", "").split(", ")
     map_size = [int(map_size_raw[0]), int(map_size_raw[1])]
-    # pprint(map_size)
 
     karel_pos_raw = code[first_index + 1].replace("Pozice Karla: ", "").split(", ")
-    karel_pos = [int(karel_pos_raw[0]) - 1, int(karel_pos_raw[1]) - 1]
-    Functions.ADMIN_Set_Karel_pos(karel_pos)
-    # pprint(karel_pos)
+    Karel.x = int(karel_pos_raw[0]) - 1
+    Karel.y = int(karel_pos_raw[1]) - 1
 
     rotations = ["NORTH", "WEST", "SOUTH", "EAST"]
-    karel_rotation = rotations.index(
-        code[first_index + 2].replace("Otočení Karla: ", "")
-    )
-    Functions.ADMIN_Set_Karel_dir(karel_rotation)
-    # pprint(karel_rotation)
+    Karel.dir = rotations.index(code[first_index + 2].replace("Otočení Karla: ", ""))
 
     karel_home_pos_raw = code[first_index + 1].replace("Pozice Karla: ", "").split(", ")
-    karel_home_pos = [int(karel_home_pos_raw[0]) - 1, int(karel_home_pos_raw[1]) - 1]
-    Functions.ADMIN_Set_Karel_home(karel_home_pos)
-    # pprint(karel_home_pos)
+    Karel.home_x = int(karel_home_pos_raw[0]) - 1
+    Karel.home_y = int(karel_home_pos_raw[1]) - 1
 
     tmp_map = []
     for i in range(map_size[1]):
@@ -326,32 +460,30 @@ def load_data_from_code():
 def run_function(func_list):
     index = 0
     tab_count = func_list[0].count("   ")
-    # pprint(func_list)
-
-    # print(tab_count)
-
     while index < len(func_list):
+        if stop_code == True:
+            break
         line = func_list[index]
-        print(line)
         if "STEP" in line:
             Functions.Step()
             draw_frame()
-            time.sleep(0.5)
+            time.sleep(interval/1000)
         elif "LEFT" in line:
             Functions.Turn_left()
             draw_frame()
-            time.sleep(0.5)
+            time.sleep(interval/1000)
         elif "PICK" in line:
             Functions.Pick_flag()
             draw_frame()
-            time.sleep(0.5)
+            time.sleep(interval/1000)
         elif "PLACE" in line:
             Functions.Place_flag()
             draw_frame()
-            time.sleep(0.5)
+            time.sleep(interval/1000)
         elif "UNTIL" in line:
             tmp_index = int(index + 1)
             tmp_code = []
+            conditions = line.replace("   ", "").replace("UNTIL ", "").split(" ")
             while True:
                 if func_list[tmp_index] == str(str("   " * tab_count) + "END"):
                     break
@@ -359,7 +491,6 @@ def run_function(func_list):
                     tmp_code.append(func_list[tmp_index])
                 tmp_index += 1
             index = tmp_index
-            conditions = line.replace("   ", "").replace("UNTIL ", "").split(" ")
             if conditions[0] == "IS":
                 while if_list[conditions[1]]():
                     run_function(tmp_code)
@@ -367,9 +498,34 @@ def run_function(func_list):
                 while not if_list[conditions[1]]():
                     run_function(tmp_code)
 
-        elif "IF" in line:
-            # dont care for now
-            pass
+        elif "IF IS" in line:
+            tmp_index = int(index + 1)
+            if_tmp_code = []
+            else_tmp_code = []
+            conditions = line.replace("   ", "").replace("IF ", "").split(" ")
+            while True:
+                if func_list[tmp_index] == str(str("   " * tab_count) + "END, ELSE"):
+                    break
+                else:
+                    if_tmp_code.append(func_list[tmp_index])
+                tmp_index += 1
+            while True:
+                if func_list[tmp_index] == str(str("   " * tab_count) + "END"):
+                    break
+                else:
+                    else_tmp_code.append(func_list[tmp_index])
+                tmp_index += 1
+            index = tmp_index
+            if conditions[0] == "IS":
+                if if_list[conditions[1]]():
+                    run_function(if_tmp_code)
+                else:
+                    run_function(else_tmp_code)
+            elif conditions[0] == "ISNOT":
+                if not if_list[conditions[1]]():
+                    run_function(if_tmp_code)
+                else:
+                    run_function(else_tmp_code)
 
         elif "REPEAT" in line:
             tmp_index = int(index + 1)
@@ -381,10 +537,12 @@ def run_function(func_list):
                     tmp_code.append(func_list[tmp_index])
                 tmp_index += 1
             index = tmp_index
-            for _ in range(int(line.replace("   ", "").replace("REPEAT", "").replace("-TIMES", ""))):
+            for _ in range(
+                int(line.replace("   ", "").replace("REPEAT", "").replace("-TIMES", ""))
+            ):
                 run_function(tmp_code)
 
-        elif "END" in line: # just to be safe, but not used (hopefully)
+        elif "END" in line:  # just to be safe, but not used (hopefully)
             pass
         else:
             run_function(
@@ -392,15 +550,57 @@ def run_function(func_list):
             )  # recursive
 
         index += 1
-        
-        
 
 
-def handle_code(file_path):
+def pre_load_code(file_path):
+    global stop_code
+    stop_code = False
     load_code(file_path)
     load_data_from_code()
-    # pprint(code_function_definitions)
-    run_function(code_function_definitions["TEST"])
 
+def run_code(func_name):
+    global stop_code
+    stop_code = False
+    run_function(code_function_definitions[func_name])
+
+def ask_user():
+    print()
+    print()
+    print("█▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀█")
+    print("█  \033[1m PyKarel99 \033[0m  █")
+    print("█▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄█")
+    print()
+    print("File name:")
+    file_name = input("-> ")
+    if not os.path.isfile(file_name):
+        print("File does not exist")
+        Game.running = False
+        exit()
+
+    pre_load_code(file_name)
+
+
+    last_func_name = ""
+    while(True):
+        if len(last_func_name) > 0:
+            print("Function name: (If same, press enter)")
+            func_name = input("-> ")
+            if len(func_name) == 0: # if empty
+                func_name = last_func_name
+            print("Running " + func_name + "\n")
+        else:
+            print("Function name:")
+            func_name = input("-> ")
+            print("Running " + func_name + "\n")
+
+        last_func_name = func_name
+        run_code(func_name)
+
+
+t1 = threading.Thread(target=ask_user, args=())
+t1.start()
 
 main_loop()
+
+
+

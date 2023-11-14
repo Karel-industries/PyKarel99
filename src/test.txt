@@ -1,6 +1,0 @@
-   REPEAT 4-TIMES
-      STEP
-      TURN-LEFT
-      STEP
-   END
-
