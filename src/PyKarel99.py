@@ -2,10 +2,12 @@ import pygame
 import time
 import threading
 import os
+from pprint import pprint
+
 ## CONFIG ##
 
-flags_are_numbers = True
-interval = 250 # ms
+flags_are_numbers = False  # True or False
+interval = 250  # ms
 
 ## END OF CONFIG ##
 
@@ -13,6 +15,7 @@ interval = 250 # ms
 class Game:
     size = 20
     running = True
+    stop_code = False
 
 
 class Karel:
@@ -165,7 +168,7 @@ class Screen:
 
 
 class Images:
-    icon = pygame.image.load('assets/icon.png')
+    icon = pygame.image.load("assets/icon.png")
 
     wall = pygame.transform.scale(
         pygame.image.load("assets/wall.png"), (Screen.square_size, Screen.square_size)
@@ -273,7 +276,6 @@ class Images:
             ),
         ]
 
-stop_code = False
 
 code = []
 
@@ -299,12 +301,15 @@ if_list = {
 def draw_frame():
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            Game.stop_code = True
             Game.running = False
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
-                pygame.quit()
+                Game.stop_code = True
+                Game.running = False
             elif event.key == pygame.K_q:
-                stop_code = True
+                Game.stop_code = True
+                Game.running = False
     # Clear the screen
     Screen.screen.fill((200, 200, 200))
 
@@ -314,19 +319,21 @@ def draw_frame():
             x_pos = x * Screen.square_size
             y_pos = y * Screen.square_size
 
+            if (x + y) % 2 == 0:
+                color = (180, 180, 180)
+            else:
+                color = (200, 200, 200)
+            pygame.draw.rect(
+                Screen.screen,
+                color,
+                (x_pos, y_pos, Screen.square_size, Screen.square_size),
+            )
+
             if MapStorage.map[x][y] == "W":
                 Screen.screen.blit(Images.wall, (x_pos, y_pos))
 
             elif MapStorage.map[x][y] == "0":
-                if (x + y) % 2 == 0:
-                    color = (180, 180, 180)
-                else:
-                    color = (200, 200, 200)
-                pygame.draw.rect(
-                    Screen.screen,
-                    color,
-                    (x_pos, y_pos, Screen.square_size, Screen.square_size),
-                )
+                pass # dont render anything
             else:
                 Screen.screen.blit(
                     Images.flags[int(MapStorage.map[x][y])], (x_pos, y_pos)
@@ -353,7 +360,7 @@ def main_loop():
 
 def load_code(file_path):
     global code
-    with open(file_path) as f:
+    with open(file_path, "r") as f:
         raw_file = f.readlines()
 
     uncomented_file = []
@@ -415,6 +422,7 @@ def load_code(file_path):
             code_function_definitions[function_name] = function_definition
 
     code = translated_code
+    # pprint(code)
 
 
 def load_data_from_code():
@@ -432,12 +440,14 @@ def load_data_from_code():
     Karel.x = int(karel_pos_raw[0]) - 1
     Karel.y = int(karel_pos_raw[1]) - 1
 
-    rotations = ["NORTH", "WEST", "SOUTH", "EAST"]
-    Karel.dir = rotations.index(code[first_index + 2].replace("Otočení Karla: ", ""))
-
-    karel_home_pos_raw = code[first_index + 1].replace("Pozice Karla: ", "").split(", ")
+    karel_home_pos_raw = (
+        code[first_index + 3].replace("Umístění domova: ", "").split(", ")
+    )
     Karel.home_x = int(karel_home_pos_raw[0]) - 1
     Karel.home_y = int(karel_home_pos_raw[1]) - 1
+
+    rotations = ["NORTH", "WEST", "SOUTH", "EAST"]
+    Karel.dir = rotations.index(code[first_index + 2].replace("Otočení Karla: ", ""))
 
     tmp_map = []
     for i in range(map_size[1]):
@@ -459,27 +469,29 @@ def load_data_from_code():
 
 def run_function(func_list):
     index = 0
+    if len(func_list) == 0:
+        return
     tab_count = func_list[0].count("   ")
     while index < len(func_list):
-        if stop_code == True:
+        if Game.stop_code == True:
             break
         line = func_list[index]
         if "STEP" in line:
             Functions.Step()
             draw_frame()
-            time.sleep(interval/1000)
+            time.sleep(interval / 1000)
         elif "LEFT" in line:
             Functions.Turn_left()
             draw_frame()
-            time.sleep(interval/1000)
+            time.sleep(interval / 1000)
         elif "PICK" in line:
             Functions.Pick_flag()
             draw_frame()
-            time.sleep(interval/1000)
+            time.sleep(interval / 1000)
         elif "PLACE" in line:
             Functions.Place_flag()
             draw_frame()
-            time.sleep(interval/1000)
+            time.sleep(interval / 1000)
         elif "UNTIL" in line:
             tmp_index = int(index + 1)
             tmp_code = []
@@ -491,6 +503,10 @@ def run_function(func_list):
                     tmp_code.append(func_list[tmp_index])
                 tmp_index += 1
             index = tmp_index
+
+            if len(tmp_code) == 0:
+                continue
+
             if conditions[0] == "IS":
                 while if_list[conditions[1]]():
                     run_function(tmp_code)
@@ -516,6 +532,12 @@ def run_function(func_list):
                     else_tmp_code.append(func_list[tmp_index])
                 tmp_index += 1
             index = tmp_index
+
+            if len(if_tmp_code) == 0:
+                continue
+            if len(else_tmp_code) == 0:
+                continue
+
             if conditions[0] == "IS":
                 if if_list[conditions[1]]():
                     run_function(if_tmp_code)
@@ -537,6 +559,10 @@ def run_function(func_list):
                     tmp_code.append(func_list[tmp_index])
                 tmp_index += 1
             index = tmp_index
+
+            if len(tmp_code) == 0:
+                continue
+
             for _ in range(
                 int(line.replace("   ", "").replace("REPEAT", "").replace("-TIMES", ""))
             ):
@@ -553,15 +579,22 @@ def run_function(func_list):
 
 
 def pre_load_code(file_path):
-    global stop_code
-    stop_code = False
-    load_code(file_path)
-    load_data_from_code()
+    if Game.running:
+        Game.stop_code = False
+        load_code(file_path)
+        load_data_from_code()
+
 
 def run_code(func_name):
-    global stop_code
-    stop_code = False
-    run_function(code_function_definitions[func_name])
+    if Game.running:
+        Game.stop_code = False
+        if not func_name in code_function_definitions.keys():
+            print("\033[31mWrong func name: " + func_name + "\033[0m")
+            return
+    
+        print("\033[32mRunning\033[0m " + func_name + "\n")
+        run_function(code_function_definitions[func_name])
+
 
 def ask_user():
     print()
@@ -573,34 +606,32 @@ def ask_user():
     print("File name:")
     file_name = input("-> ")
     if not os.path.isfile(file_name):
-        print("File does not exist")
+        print("\033[31mFile does not exist!\033[0m")
+        print()
+        Game.stop_code = True
         Game.running = False
         exit()
 
-    pre_load_code(file_name)
-
+    if Game.running:
+        pre_load_code(file_name)
 
     last_func_name = ""
-    while(True):
+    while Game.running:
         if len(last_func_name) > 0:
             print("Function name: (If same, press enter)")
             func_name = input("-> ")
-            if len(func_name) == 0: # if empty
+            if len(func_name) == 0:  # if empty
                 func_name = last_func_name
-            print("Running " + func_name + "\n")
         else:
             print("Function name:")
             func_name = input("-> ")
-            print("Running " + func_name + "\n")
-
         last_func_name = func_name
-        run_code(func_name)
+
+        if Game.running:
+            run_code(func_name)
 
 
 t1 = threading.Thread(target=ask_user, args=())
 t1.start()
 
 main_loop()
-
-
-

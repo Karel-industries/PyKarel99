@@ -54,6 +54,9 @@ IFTEST		; Nový pøíkaz
    KONEC
 KONEC		; Konec definice pøíkazu NOVÝ PØÍKAZ
 
+EMPTYTEST
+KONEC
+
 ; Mìsto projektu Karel 99
 ;
 ; Velikost mìsta: x, y
@@ -62,7 +65,7 @@ KONEC		; Konec definice pøíkazu NOVÝ PØÍKAZ
 ; Umístìní domova: x, y
 
 Velikost mìsta: 20, 20
-Pozice Karla: 1, 10
+Pozice Karla: 1, 1
 Otoèení Karla: VÝCHOD
 Umístìní domova: 1, 10
 
