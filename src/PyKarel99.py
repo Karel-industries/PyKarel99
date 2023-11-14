@@ -2,6 +2,7 @@ import pygame
 import time
 import threading
 import os
+import pprint
 ## CONFIG ##
 
 flags_are_numbers = True
@@ -353,7 +354,7 @@ def main_loop():
 
 def load_code(file_path):
     global code
-    with open(file_path) as f:
+    with open(file_path, "r", encoding="mbcs") as f:
         raw_file = f.readlines()
 
     uncomented_file = []
@@ -415,6 +416,7 @@ def load_code(file_path):
             code_function_definitions[function_name] = function_definition
 
     code = translated_code
+    pprint(code)
 
 
 def load_data_from_code():
