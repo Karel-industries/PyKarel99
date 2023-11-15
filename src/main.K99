@@ -4,20 +4,29 @@
 ; Slovník projektu Karel 99
 ;
 ; Statistika:
-;   Poèet pøíkazù: 15
+;   Poèet pøíkazù: 16
 ;   Poèet systémových pøíkazù: 10
-;   Poèet uživatelských pøíkazù: 5
-;   Poèet prázdných pøíkazù: 0
+;   Poèet uživatelských pøíkazù: 6
+;   Poèet prázdných pøíkazù: 1
 
 TEST		; Nový pøíkaz
-;   KROK
    IFTEST
-;   KROK
-;   KROK
-;   VPRAVO
    POLOŽ
-;   GOTOWALL
 KONEC		; Konec definice pøíkazu TEST
+
+IFTEST		; Nový pøíkaz
+   KDYŽ JE ZEÏ
+      VLEVO-VBOK
+      VLEVO-VBOK
+      VLEVO-VBOK
+      VLEVO-VBOK
+   KONEC, JINAK
+      KROK
+      KROK
+      KROK
+      KROK
+   KONEC
+KONEC		; Konec definice pøíkazu IFTEST
 
 VPRAVO		; Nový pøíkaz
    OPAKUJ 3-KRÁT
@@ -40,22 +49,8 @@ GOTOWALL		; Nový pøíkaz
    KONEC
 KONEC		; Konec definice pøíkazu GOTOWALL
 
-IFTEST		; Nový pøíkaz
-   KDYŽ JE ZEÏ
-      VLEVO-VBOK
-      VLEVO-VBOK
-      VLEVO-VBOK
-      VLEVO-VBOK
-   KONEC, JINAK
-      KROK
-      KROK
-      KROK
-      KROK
-   KONEC
-KONEC		; Konec definice pøíkazu NOVÝ PØÍKAZ
-
-EMPTYTEST
-KONEC
+EMPTYTEST		; Nový pøíkaz
+KONEC		; Konec definice pøíkazu EMPTYTEST
 
 ; Mìsto projektu Karel 99
 ;
@@ -65,7 +60,7 @@ KONEC
 ; Umístìní domova: x, y
 
 Velikost mìsta: 20, 20
-Pozice Karla: 1, 1
+Pozice Karla: 1, 12
 Otoèení Karla: VÝCHOD
 Umístìní domova: 1, 10
 
@@ -75,7 +70,7 @@ Umístìní domova: 1, 10
 ;   X    zeï
 
 Definice mìsta:
-X...................
+....................
 ...................1
 ...................2
 ...................3

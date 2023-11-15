@@ -8,9 +8,9 @@ from pprint import pprint
 
 flags_are_numbers = False  # True or False
 interval = 250  # ms
+save_copy_as_utf8 = True
 
 ## END OF CONFIG ##
-
 
 class Game:
     size = 20
@@ -360,8 +360,25 @@ def main_loop():
 
 def load_code(file_path):
     global code
-    with open(file_path, "r") as f:
-        raw_file = f.readlines()
+    
+    #with open(file_path, "r", encoding='mbcs') as f:
+    try:
+        with open(file_path, "r", encoding='utf-8') as f:
+            save_copy_as_utf8 = False
+            raw_file = f.readlines()
+    except UnicodeDecodeError:
+        with open(file_path, "r", encoding='mbcs') as f:
+            raw_file = f.readlines()
+
+
+    # pprint(raw_file)
+    
+    if save_copy_as_utf8 and not "utf8" in file_path:
+        with open(file_path.replace(".", "_utf8."), "w", encoding='utf-8') as f:
+            for line in raw_file:
+                f.write(line)
+
+    raw_file = raw_file
 
     uncomented_file = []
     for i in range(len(raw_file)):
