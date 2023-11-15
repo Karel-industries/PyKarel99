@@ -8,7 +8,6 @@ from pprint import pprint
 
 flags_are_numbers = False  # True or False
 interval = 250  # ms
-save_copy_as_utf8 = True
 
 ## END OF CONFIG ##
 
@@ -360,26 +359,12 @@ def main_loop():
 
 def load_code(file_path):
     global code
-    
+
+
     #with open(file_path, "r", encoding='mbcs') as f:
-    try:
-        with open(file_path, "r", encoding='utf-8') as f:
-            save_copy_as_utf8 = False
-            raw_file = f.readlines()
-    except UnicodeDecodeError:
-        with open(file_path, "r", encoding='mbcs') as f:
-            raw_file = f.readlines()
-
-
-    # pprint(raw_file)
+    with open(file_path, "r", encoding='iso_8859_2') as f:
+        raw_file = f.readlines()
     
-    if save_copy_as_utf8 and not "utf8" in file_path:
-        with open(file_path.replace(".", "_utf8."), "w", encoding='utf-8') as f:
-            for line in raw_file:
-                f.write(line)
-
-    raw_file = raw_file
-
     uncomented_file = []
     for i in range(len(raw_file)):
         if not raw_file[i].startswith(";") and not raw_file[i] == "\n":
@@ -389,8 +374,12 @@ def load_code(file_path):
     for line in uncomented_file:
         unnewlined_file.append(str(line.replace("\n", "").replace("\t", "")))
 
-    translated_code = []
+    ungibrished_file = []
     for line in unnewlined_file:
+        ungibrished_file.append(line.replace("\x8e", "Ž").replace("\x9e", "ž"))
+
+    translated_code = []
+    for line in ungibrished_file:
         translated_code.append(
             line.replace("KROK", "STEP")
             .replace("VLEVO-VBOK", "LEFT")
