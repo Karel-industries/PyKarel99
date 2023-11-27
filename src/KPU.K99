@@ -1,0 +1,4999 @@
+; Projekt Karel 99
+; ================
+
+; Slovník projektu Karel 99
+;
+; Statistika:
+;   Poèet pøíkazù: 123
+;   Poèet systémových pøíkazù: 10
+;   Poèet uživatelských pøíkazù: 113
+;   Poèet prázdných pøíkazù: 10
+
+==BOOT==		; Nový pøíkaz
+   ROOT-ALIGN
+   __MAIN__
+KONEC		; Konec definice pøíkazu ==BOOT==
+
+ROOT-ALIGN		; Nový pøíkaz
+   DOKUD NENÍ SEVER
+      VLEVO-VBOK
+   KONEC
+   DOKUD NENÍ ZEÏ
+      KROK
+   KONEC
+   VLEVO-VBOK
+   DOKUD NENÍ DOMOV
+      KDYŽ JE ZEÏ
+         VLEVO-VBOK
+         VLEVO-VBOK
+      KONEC, JINAK
+      KONEC
+      KROK
+   KONEC
+   DOKUD NENÍ JIH
+      VLEVO-VBOK
+   KONEC
+KONEC		; Konec definice pøíkazu ROOT-ALIGN
+
+__MAIN__		; Nový pøíkaz
+   // VÝCHOD = HALT KPU
+   DOKUD NENÍ VÝCHOD
+      __FETCH__
+   KONEC
+KONEC		; Konec definice pøíkazu __MAIN__
+
+// VÝCHOD = HALT KPU		; Nový pøíkaz
+KONEC		; Konec definice pøíkazu // VÝCHOD = HALT KPU
+
+__FETCH__		; Nový pøíkaz
+KONEC		; Konec definice pøíkazu __FETCH__
+
+FAULT-ALIGN		; Nový pøíkaz
+   DOKUD NENÍ VÝCHOD
+      VLEVO-VBOK
+   KONEC
+   DOKUD NENÍ ZEÏ
+      KROK
+   KONEC
+   VLEVO-VBOK
+   DOKUD NENÍ ZEÏ
+      KROK
+   KONEC
+KONEC		; Konec definice pøíkazu FAULT-ALIGN
+
+__DRE__		; Nový pøíkaz
+   // DECODE, RESTORE, EXECUTE COMBINED FUNCTION
+   DOKUD NENÍ SEVER
+      VLEVO-VBOK
+   KONEC
+   // START OF THE INSTRUCTION IF BLOCK
+   KDYŽ NENÍ ZNAÈKA
+      __DRE-GID-0-MEMORY__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __DRE-GID-1-ARITHMETIC__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __DRE-GID-2__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __DRE-GID-3__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __DRE-GID-4__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __DRE-GID-5__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __DRE-GID-6__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __DRE-GID-7__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __DRE-GID-8__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE__
+
+// DECODE, RESTORE, EXECUTE COMBINED FUNCTION		; Nový pøíkaz
+KONEC		; Konec definice pøíkazu // DECODE, RESTORE, EXECUTE COMBINED FUNCTION
+
+// START OF THE INSTRUCTION IF BLOCK		; Nový pøíkaz
+KONEC		; Konec definice pøíkazu // START OF THE INSTRUCTION IF BLOCK
+
+__DRE-GID-0-MEMORY__		; Nový pøíkaz
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __DRE-GID-0-IID-0-8__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __DRE-GID-0-IID-9-17__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __DRE-GID-0-IID-18-26__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __DRE-GID-0-IID-27-35__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __DRE-GID-0-IID-36-44__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __DRE-GID-0-IID-45-53__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __DRE-GID-0-IID-54-62__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __DRE-GID-0-IID-63-71__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __DRE-GID-0-IID-72-80__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-0-MEMORY__
+
+__DRE-GID-1-ARITHMETIC__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 1-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __DRE-GID-1-IID-0-8__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __DRE-GID-1-IID-9-17__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __DRE-GID-1-IID-18-26__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __DRE-GID-1-IID-27-35__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __DRE-GID-1-IID-36-44__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __DRE-GID-1-IID-45-53__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __DRE-GID-1-IID-54-62__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __DRE-GID-1-IID-63-71__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __DRE-GID-1-IID-72-80__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-1-ARITHMETIC__
+
+__DRE-GID-2__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 2-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __DRE-GID-2-IID-0-8__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __DRE-GID-2-IID-9-17__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __DRE-GID-2-IID-18-26__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __DRE-GID-2-IID-27-35__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __DRE-GID-2-IID-36-44__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __DRE-GID-2-IID-45-53__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __DRE-GID-2-IID-54-62__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __DRE-GID-2-IID-63-71__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __DRE-GID-2-IID-72-80__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-2__
+
+__DRE-GID-3__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 3-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __DRE-GID-3-IID-0-8__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __DRE-GID-3-IID-9-17__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __DRE-GID-3-IID-18-26__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __DRE-GID-3-IID-27-35__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __DRE-GID-3-IID-36-44__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __DRE-GID-3-IID-45-53__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __DRE-GID-3-IID-54-62__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __DRE-GID-3-IID-63-71__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __DRE-GID-3-IID-72-80__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-3__
+
+__DRE-GID-4__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 4-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __DRE-GID-4-IID-0-8__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __DRE-GID-4-IID-9-17__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __DRE-GID-4-IID-18-26__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __DRE-GID-4-IID-27-35__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __DRE-GID-4-IID-36-44__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __DRE-GID-4-IID-45-53__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __DRE-GID-4-IID-54-62__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __DRE-GID-4-IID-63-71__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __DRE-GID-4-IID-72-80__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-4__
+
+__DRE-GID-5__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 5-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __DRE-GID-5-IID-0-8__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __DRE-GID-5-IID-9-17__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __DRE-GID-5-IID-18-26__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __DRE-GID-5-IID-27-35__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __DRE-GID-5-IID-36-44__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __DRE-GID-5-IID-45-53__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __DRE-GID-5-IID-54-62__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __DRE-GID-5-IID-63-71__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __DRE-GID-5-IID-72-80__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-5__
+
+__DRE-GID-6__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 6-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __DRE-GID-6-IID-0-8__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __DRE-GID-6-IID-9-17__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __DRE-GID-6-IID-18-26__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __DRE-GID-6-IID-27-35__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __DRE-GID-6-IID-36-44__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __DRE-GID-6-IID-45-53__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __DRE-GID-6-IID-54-62__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __DRE-GID-6-IID-63-71__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __DRE-GID-6-IID-72-80__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-6__
+
+__DRE-GID-7__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 7-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __DRE-GID-7-IID-0-8__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __DRE-GID-7-IID-9-17__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __DRE-GID-7-IID-18-26__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __DRE-GID-7-IID-27-35__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __DRE-GID-7-IID-36-44__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __DRE-GID-7-IID-45-53__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __DRE-GID-7-IID-54-62__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __DRE-GID-7-IID-63-71__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __DRE-GID-7-IID-72-80__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-7__
+
+__DRE-GID-8__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 8-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __DRE-GID-8-IID-0-8__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __DRE-GID-8-IID-9-17__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __DRE-GID-8-IID-18-26__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __DRE-GID-8-IID-27-35__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __DRE-GID-8-IID-36-44__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __DRE-GID-8-IID-45-53__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __DRE-GID-8-IID-54-62__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __DRE-GID-8-IID-63-71__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __DRE-GID-8-IID-72-80__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-8__
+
+__FAULT-UNKNOWN-INSTRUCTION__		; Nový pøíkaz
+   FAULT-ALIGN
+   DOKUD JE ZNAÈKA
+      ZVEDNI
+   KONEC
+   STOP
+KONEC		; Konec definice pøíkazu __FAULT-UNKNOWN-INSTRUCTION__
+
+__DRE-GID-0-IID-0-8__		; Nový pøíkaz
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-0-IID-0-8__
+
+__DRE-GID-0-IID-9-17__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 1-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-0-IID-9-17__
+
+__DRE-GID-0-IID-18-26__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 2-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-0-IID-18-26__
+
+__DRE-GID-0-IID-27-35__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 3-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-0-IID-27-35__
+
+__DRE-GID-0-IID-36-44__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 4-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-0-IID-36-44__
+
+__DRE-GID-0-IID-45-53__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 5-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-0-IID-45-53__
+
+__DRE-GID-0-IID-54-62__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 6-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-0-IID-54-62__
+
+__DRE-GID-0-IID-63-71__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 7-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-0-IID-63-71__
+
+__DRE-GID-0-IID-72-80__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 8-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-0-IID-72-80__
+
+// RESTORE INSTRUCTION KAT		; Nový pøíkaz
+KONEC		; Konec definice pøíkazu // RESTORE INSTRUCTION KAT
+
+__DRE-GID-1-IID-0-8__		; Nový pøíkaz
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-1-IID-0-8__
+
+__DRE-GID-1-IID-9-17__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 1-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-1-IID-9-17__
+
+__DRE-GID-1-IID-18-26__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 2-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-1-IID-18-26__
+
+__DRE-GID-1-IID-27-35__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 3-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-1-IID-27-35__
+
+__DRE-GID-1-IID-36-44__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 4-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-1-IID-36-44__
+
+__DRE-GID-1-IID-45-53__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 5-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-1-IID-45-53__
+
+__DRE-GID-1-IID-54-62__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 6-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-1-IID-54-62__
+
+__DRE-GID-1-IID-63-71__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 7-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-1-IID-63-71__
+
+__DRE-GID-1-IID-72-80__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 8-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-1-IID-72-80__
+
+__DRE-GID-2-IID-0-8__		; Nový pøíkaz
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-2-IID-0-8__
+
+__DRE-GID-2-IID-9-17__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 1-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-2-IID-9-17__
+
+__DRE-GID-2-IID-18-26__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 2-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-2-IID-18-26__
+
+__DRE-GID-2-IID-27-35__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 3-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-2-IID-27-35__
+
+__DRE-GID-2-IID-36-44__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 4-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-2-IID-36-44__
+
+__DRE-GID-2-IID-45-53__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 5-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-2-IID-45-53__
+
+__DRE-GID-2-IID-54-62__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 6-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-2-IID-54-62__
+
+__DRE-GID-2-IID-63-71__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 7-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-2-IID-63-71__
+
+__DRE-GID-2-IID-72-80__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 8-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-2-IID-72-80__
+
+__DRE-GID-3-IID-0-8__		; Nový pøíkaz
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-3-IID-0-8__
+
+__DRE-GID-3-IID-9-17__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 1-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-3-IID-9-17__
+
+__DRE-GID-3-IID-18-26__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 2-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-3-IID-18-26__
+
+__DRE-GID-3-IID-27-35__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 3-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-3-IID-27-35__
+
+__DRE-GID-3-IID-36-44__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 4-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-3-IID-36-44__
+
+__DRE-GID-3-IID-45-53__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 5-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-3-IID-45-53__
+
+__DRE-GID-3-IID-54-62__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 6-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-3-IID-54-62__
+
+__DRE-GID-3-IID-63-71__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 7-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-3-IID-63-71__
+
+__DRE-GID-3-IID-72-80__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 8-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-3-IID-72-80__
+
+__DRE-GID-4-IID-0-8__		; Nový pøíkaz
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-4-IID-0-8__
+
+__DRE-GID-4-IID-9-17__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 1-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-4-IID-9-17__
+
+__DRE-GID-4-IID-18-26__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 2-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-4-IID-18-26__
+
+__DRE-GID-4-IID-27-35__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 3-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-4-IID-27-35__
+
+__DRE-GID-4-IID-36-44__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 4-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-4-IID-36-44__
+
+__DRE-GID-4-IID-45-53__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 5-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-4-IID-45-53__
+
+__DRE-GID-4-IID-54-62__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 6-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-4-IID-54-62__
+
+__DRE-GID-4-IID-63-71__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 7-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-4-IID-63-71__
+
+__DRE-GID-4-IID-72-80__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 8-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-4-IID-72-80__
+
+__DRE-GID-5-IID-0-8__		; Nový pøíkaz
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-5-IID-0-8__
+
+__DRE-GID-5-IID-9-17__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 1-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-5-IID-9-17__
+
+__DRE-GID-5-IID-18-26__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 2-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-5-IID-18-26__
+
+__DRE-GID-5-IID-27-35__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 3-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-5-IID-27-35__
+
+__DRE-GID-5-IID-36-44__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 4-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-5-IID-36-44__
+
+__DRE-GID-5-IID-45-53__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 5-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-5-IID-45-53__
+
+__DRE-GID-5-IID-54-62__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 6-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-5-IID-54-62__
+
+__DRE-GID-5-IID-63-71__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 7-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-5-IID-63-71__
+
+__DRE-GID-5-IID-72-80__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 8-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-5-IID-72-80__
+
+__DRE-GID-6-IID-0-8__		; Nový pøíkaz
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-6-IID-0-8__
+
+__DRE-GID-6-IID-9-17__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 1-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-6-IID-9-17__
+
+__DRE-GID-6-IID-18-26__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 2-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-6-IID-18-26__
+
+__DRE-GID-6-IID-27-35__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 3-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-6-IID-27-35__
+
+__DRE-GID-6-IID-36-44__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 4-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-6-IID-36-44__
+
+__DRE-GID-6-IID-45-53__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 5-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-6-IID-45-53__
+
+__DRE-GID-6-IID-54-62__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 6-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-6-IID-54-62__
+
+__DRE-GID-6-IID-63-71__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 7-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-6-IID-63-71__
+
+__DRE-GID-6-IID-72-80__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 8-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-6-IID-72-80__
+
+__DRE-GID-7-IID-0-8__		; Nový pøíkaz
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-7-IID-0-8__
+
+__DRE-GID-7-IID-9-17__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 1-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-7-IID-9-17__
+
+__DRE-GID-7-IID-18-26__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 2-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-7-IID-18-26__
+
+__DRE-GID-7-IID-27-35__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 3-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-7-IID-27-35__
+
+__DRE-GID-7-IID-36-44__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 4-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-7-IID-36-44__
+
+__DRE-GID-7-IID-45-53__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 5-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-7-IID-45-53__
+
+__DRE-GID-7-IID-54-62__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 6-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-7-IID-54-62__
+
+__DRE-GID-7-IID-63-71__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 7-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-7-IID-63-71__
+
+__DRE-GID-7-IID-72-80__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 8-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-7-IID-72-80__
+
+__DRE-GID-8-IID-0-8__		; Nový pøíkaz
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-8-IID-0-8__
+
+__DRE-GID-8-IID-9-17__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 1-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-8-IID-9-17__
+
+__DRE-GID-8-IID-18-26__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 2-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-8-IID-18-26__
+
+__DRE-GID-8-IID-27-35__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 3-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-8-IID-27-35__
+
+__DRE-GID-8-IID-36-44__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 4-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-8-IID-36-44__
+
+__DRE-GID-8-IID-45-53__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 5-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-8-IID-45-53__
+
+__DRE-GID-8-IID-54-62__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 6-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-8-IID-54-62__
+
+__DRE-GID-8-IID-63-71__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 7-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-8-IID-63-71__
+
+__DRE-GID-8-IID-72-80__		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 8-KRÁT
+      POLOŽ
+   KONEC
+   KROK
+   KDYŽ NENÍ ZNAÈKA
+      __FAULT-UNKNOWN-INSTRUCTION__
+   KONEC, JINAK
+      ZVEDNI
+      KDYŽ NENÍ ZNAÈKA
+         __FAULT-UNKNOWN-INSTRUCTION__
+      KONEC, JINAK
+         ZVEDNI
+         KDYŽ NENÍ ZNAÈKA
+            __FAULT-UNKNOWN-INSTRUCTION__
+         KONEC, JINAK
+            ZVEDNI
+            KDYŽ NENÍ ZNAÈKA
+               __FAULT-UNKNOWN-INSTRUCTION__
+            KONEC, JINAK
+               ZVEDNI
+               KDYŽ NENÍ ZNAÈKA
+                  __FAULT-UNKNOWN-INSTRUCTION__
+               KONEC, JINAK
+                  ZVEDNI
+                  KDYŽ NENÍ ZNAÈKA
+                     __FAULT-UNKNOWN-INSTRUCTION__
+                  KONEC, JINAK
+                     ZVEDNI
+                     KDYŽ NENÍ ZNAÈKA
+                        __FAULT-UNKNOWN-INSTRUCTION__
+                     KONEC, JINAK
+                        ZVEDNI
+                        KDYŽ NENÍ ZNAÈKA
+                           __FAULT-UNKNOWN-INSTRUCTION__
+                        KONEC, JINAK
+                           ZVEDNI
+                           KDYŽ NENÍ ZNAÈKA
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC, JINAK
+                              __FAULT-UNKNOWN-INSTRUCTION__
+                           KONEC
+                        KONEC
+                     KONEC
+                  KONEC
+               KONEC
+            KONEC
+         KONEC
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu __DRE-GID-8-IID-72-80__
+
+NOVÝ PØÍKAZ		; Nový pøíkaz
+KONEC		; Konec definice pøíkazu NOVÝ PØÍKAZ
+
+__ADD__		; Nový pøíkaz
+KONEC		; Konec definice pøíkazu __ADD__
+
+__ADD__<R0, R0>		; Nový pøíkaz
+   // RESTORE INSTRUCTION KAT
+   OPAKUJ 1-KRÁT
+      POLOŽ
+   KONEC
+   ROOT-ALIGN
+   VLEVO-VBOK
+   INCREMENT
+KONEC		; Konec definice pøíkazu __ADD__<R0, R0>
+
+INCREMENT		; Nový pøíkaz
+KONEC		; Konec definice pøíkazu INCREMENT
+
+COPY-FETCH<R0, OP1>		; Nový pøíkaz
+KONEC		; Konec definice pøíkazu COPY-FETCH<R0, OP1>
+
+COPY-FETCH		; Nový pøíkaz
+KONEC		; Konec definice pøíkazu COPY-FETCH
+
+INC-AND-CARRY		; Nový pøíkaz
+   INVERT-KAT
+   KDYŽ JE ZNAÈKA
+      ZVEDNI
+   KONEC, JINAK
+      KROK
+      INC2-AND-CARRY
+      OPAKUJ 2-KRÁT
+         VLEVO-VBOK
+      KONEC
+      KROK
+      OPAKUJ 2-KRÁT
+         VLEVO-VBOK
+      KONEC
+      FILL
+   KONEC
+   INVERT-KAT
+KONEC		; Konec definice pøíkazu INC-AND-CARRY
+
+INVERT-KAT		; Nový pøíkaz
+   KDYŽ JE ZNAÈKA
+      ZVEDNI
+      INVERT-KAT
+      ZVEDNI
+   KONEC, JINAK
+      FILL
+   KONEC
+KONEC		; Konec definice pøíkazu INVERT-KAT
+
+FILL		; Nový pøíkaz
+   OPAKUJ 8-KRÁT
+      POLOŽ
+   KONEC
+KONEC		; Konec definice pøíkazu FILL
+
+INC2-AND-CARRY		; Nový pøíkaz
+   INVERT-KAT
+   KDYŽ JE ZNAÈKA
+      ZVEDNI
+   KONEC, JINAK
+      KROK
+      INC3-AND-IGNORE
+      OPAKUJ 2-KRÁT
+         VLEVO-VBOK
+      KONEC
+      KROK
+      OPAKUJ 2-KRÁT
+         VLEVO-VBOK
+      KONEC
+      FILL
+   KONEC
+   INVERT-KAT
+KONEC		; Konec definice pøíkazu INC2-AND-CARRY
+
+INC3-AND-IGNORE		; Nový pøíkaz
+   INVERT-KAT
+   KDYŽ JE ZNAÈKA
+      ZVEDNI
+   KONEC, JINAK
+      FILL
+   KONEC
+   INVERT-KAT
+KONEC		; Konec definice pøíkazu INC3-AND-IGNORE
+
+TEST		; Nový pøíkaz
+   DOKUD NENÍ DOMOV
+      INC-AND-CARRY
+   KONEC
+KONEC		; Konec definice pøíkazu TEST
+
+; Mìsto projektu Karel 99
+;
+; Velikost mìsta: x, y
+; Pozice Karla: x, y
+; Otoèení Karla: SEVER, JIH, ZÁPAD nebo VÝCHOD
+; Umístìní domova: x, y
+
+Velikost mìsta: 20, 20
+Pozice Karla: 13, 12
+Otoèení Karla: SEVER
+Umístìní domova: 7, 1
+
+; Definice mìsta:
+;   .    prázdné místo
+;   1-8  poèet položených znaèek
+;   X    zeï
+
+Definice mìsta:
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+............2.......
+............1.......
+............1.......
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+
+; Konec definice mìsta
+

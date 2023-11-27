@@ -1,0 +1,378 @@
+; Projekt Karel 99
+; ================
+
+; Slovník projektu Karel 99
+;
+; Statistika:
+;   Poèet pøíkazù: 37
+;   Poèet systémových pøíkazù: 10
+;   Poèet uživatelských pøíkazù: 27
+;   Poèet prázdných pøíkazù: 0
+
+KE-ZDI		; Nový pøíkaz
+   DOKUD NENÍ ZEÏ
+      KROK
+   KONEC
+KONEC		; Konec definice pøíkazu KE-ZDI
+
+V-PRAVO-BOK		; Nový pøíkaz
+   OPAKUJ 3-KRÁT
+      VLEVO-VBOK
+   KONEC
+KONEC		; Konec definice pøíkazu V-PRAVO-BOK
+
+ÈELEM-V-ZAD		; Nový pøíkaz
+   OPAKUJ 2-KRÁT
+      VLEVO-VBOK
+   KONEC
+KONEC		; Konec definice pøíkazu ÈELEM-V-ZAD
+
+NA-ZNAÈKU		; Nový pøíkaz
+   DOKUD NENÍ ZNAÈKA
+      KROK
+   KONEC
+KONEC		; Konec definice pøíkazu NA-ZNAÈKU
+
+NA-SEVER		; Nový pøíkaz
+   DOKUD NENÍ SEVER
+      VLEVO-VBOK
+   KONEC
+KONEC		; Konec definice pøíkazu NA-SEVER
+
+DOMÙ		; Nový pøíkaz
+   NA-SEVER
+   VLEVO-VBOK
+   KE-ZDI
+   VLEVO-VBOK
+   KE-ZDI
+   VLEVO-VBOK
+KONEC		; Konec definice pøíkazu DOMÙ
+
+OBÌHNI		; Nový pøíkaz
+   OPAKUJ 4-KRÁT
+      KE-ZDI
+      VLEVO-VBOK
+   KONEC
+KONEC		; Konec definice pøíkazu OBÌHNI
+
+ZRCADLO		; Nový pøíkaz
+   ZR-STEP
+   ÈELEM-V-ZAD
+KONEC		; Konec definice pøíkazu ZRCADLO
+
+ZR-STEP		; Nový pøíkaz
+   KROK
+   KDYŽ JE ZEÏ
+      POLOŽ
+      ÈELEM-V-ZAD
+   KONEC, JINAK
+      ZR-STEP
+   KONEC
+   KROK
+KONEC		; Konec definice pøíkazu ZR-STEP
+
+HOBOT-CARRY		; Nový pøíkaz
+   KDYŽ JE ZNAÈKA
+      ZVEDNI
+      HOBOT-CARRY
+      POLOŽ
+   KONEC, JINAK
+      KROK
+   KONEC
+KONEC		; Konec definice pøíkazu HOBOT-CARRY
+
+HOBOT		; Nový pøíkaz
+   KDYŽ JE ZEÏ
+      STOP
+   KONEC, JINAK
+   KONEC
+   KROK
+   KDYŽ JE ZNAÈKA
+      ÈELEM-V-ZAD
+   KONEC, JINAK
+      HOBOT
+   KONEC
+   HOBOT-CARRY
+KONEC		; Konec definice pøíkazu HOBOT
+
+HOBOT-ALL		; Nový pøíkaz
+   KDYŽ NENÍ ZEÏ
+      HOBOT
+      ÈELEM-V-ZAD
+      HOBOT-ALL
+   KONEC, JINAK
+   KONEC
+KONEC		; Konec definice pøíkazu HOBOT-ALL
+
+KORÁLKY		; Nový pøíkaz
+   ZVEDNI
+   KDYŽ JE ZNAÈKA
+      KORÁLKY
+   KONEC, JINAK
+   KONEC
+   KROK
+   POLOŽ
+KONEC		; Konec definice pøíkazu KORÁLKY
+
+POSBÍREJ		; Nový pøíkaz
+   ZVEDNI
+   KROK
+   KDYŽ JE ZNAÈKA
+      POSBÍREJ
+   KONEC, JINAK
+   KONEC
+   POLOŽ
+KONEC		; Konec definice pøíkazu POSBÍREJ
+
+SAFE-KROK		; Nový pøíkaz
+   KDYŽ NENÍ ZEÏ
+      KROK
+   KONEC, JINAK
+   KONEC
+KONEC		; Konec definice pøíkazu SAFE-KROK
+
+DO-PROSTØED-LINE		; Nový pøíkaz
+   KDYŽ NENÍ ZEÏ
+      KROK
+      SAFE-KROK
+      KDYŽ JE ZEÏ
+         ÈELEM-V-ZAD
+      KONEC, JINAK
+         DO-PROSTØED-LINE
+      KONEC
+      KROK
+   KONEC, JINAK
+   KONEC
+KONEC		; Konec definice pøíkazu DO-PROSTØED-LINE
+
+DO-PROSTØED		; Nový pøíkaz
+   KE-ZDI
+   ÈELEM-V-ZAD
+   DO-PROSTØED-LINE
+   V-PRAVO-BOK
+   KE-ZDI
+   ÈELEM-V-ZAD
+   DO-PROSTØED-LINE
+KONEC		; Konec definice pøíkazu DO-PROSTØED
+
+BÌH-PØES-PØEKÁŽKY		; Nový pøíkaz
+   DOKUD NENÍ ZNAÈKA
+      KE-ZDI
+      DOKUD JE ZEÏ
+         VLEVO-VBOK
+         KROK
+         V-PRAVO-BOK
+      KONEC
+      KROK
+      KROK
+      V-PRAVO-BOK
+      KE-ZDI
+      VLEVO-VBOK
+      KE-ZDI-NEBO-ZNAÈCE
+   KONEC
+KONEC		; Konec definice pøíkazu BÌH-PØES-PØEKÁŽKY
+
+KE-ZDI-NEBO-ZNAÈCE		; Nový pøíkaz
+   KDYŽ NENÍ ZNAÈKA
+      KDYŽ NENÍ ZEÏ
+         KROK
+         KE-ZDI-NEBO-ZNAÈCE
+      KONEC, JINAK
+      KONEC
+   KONEC, JINAK
+   KONEC
+KONEC		; Konec definice pøíkazu KE-ZDI-NEBO-ZNAÈCE
+
+MAZE-EXPLORE-V1		; Nový pøíkaz
+   KDYŽ NENÍ ZNAÈKA
+      KDYŽ NENÍ ZEÏ
+         KROK
+         MAZE-EXPLORE-V1
+         VLEVO-VBOK
+         MAZE-EXPLORE-V1
+         MAZE-EXPLORE-V1
+         KDYŽ NENÍ ZNAÈKA
+            V-PRAVO-BOK
+            KROK
+         KONEC, JINAK
+         KONEC
+      KONEC, JINAK
+         ÈELEM-V-ZAD
+      KONEC
+   KONEC, JINAK
+   KONEC
+KONEC		; Konec definice pøíkazu MAZE-EXPLORE-V1
+
+LUX		; Nový pøíkaz
+   DOMÙ
+   LUX-KE-ZDI
+   VLEVO-VBOK
+   KDYŽ NENÍ ZEÏ
+      KROK
+      VLEVO-VBOK
+      LUX-KE-ZDI
+      V-PRAVO-BOK
+   KONEC, JINAK
+   KONEC
+   DOKUD NENÍ ZEÏ
+      KROK
+      V-PRAVO-BOK
+      LUX-KE-ZDI
+      VLEVO-VBOK
+      KDYŽ NENÍ ZEÏ
+         KROK
+         VLEVO-VBOK
+         LUX-KE-ZDI
+         V-PRAVO-BOK
+      KONEC, JINAK
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu LUX
+
+LUX-KE-ZDI		; Nový pøíkaz
+   DOKUD NENÍ ZEÏ
+      DOKUD JE ZNAÈKA
+         ZVEDNI
+      KONEC
+      KROK
+   KONEC
+   DOKUD JE ZNAÈKA
+      ZVEDNI
+   KONEC
+KONEC		; Konec definice pøíkazu LUX-KE-ZDI
+
+KEBEREC		; Nový pøíkaz
+   DOMÙ
+   KEBEREC-KE-ZDI
+   VLEVO-VBOK
+   KDYŽ NENÍ ZEÏ
+      KROK
+      VLEVO-VBOK
+      KEBEREC-KE-ZDI
+      V-PRAVO-BOK
+   KONEC, JINAK
+   KONEC
+   DOKUD NENÍ ZEÏ
+      KROK
+      V-PRAVO-BOK
+      KEBEREC-KE-ZDI
+      VLEVO-VBOK
+      KDYŽ NENÍ ZEÏ
+         KROK
+         VLEVO-VBOK
+         KEBEREC-KE-ZDI
+         V-PRAVO-BOK
+      KONEC, JINAK
+      KONEC
+   KONEC
+KONEC		; Konec definice pøíkazu KEBEREC
+
+KEBEREC-KE-ZDI		; Nový pøíkaz
+   DOKUD NENÍ ZEÏ
+      DOKUD JE ZNAÈKA
+         ZVEDNI
+      KONEC
+      OPAKUJ 8-KRÁT
+         POLOŽ
+      KONEC
+      KROK
+   KONEC
+   DOKUD JE ZNAÈKA
+      ZVEDNI
+   KONEC
+   OPAKUJ 8-KRÁT
+      POLOŽ
+   KONEC
+KONEC		; Konec definice pøíkazu KEBEREC-KE-ZDI
+
+PEXESO		; Nový pøíkaz
+   DOMÙ
+   VLEVO-VBOK
+   KROK
+   V-PRAVO-BOK
+   PEXESO-KE-ZDI
+   VLEVO-VBOK
+   KROK
+   DOKUD NENÍ ZEÏ
+      VLEVO-VBOK
+      PEXESO-KE-ZDI
+      V-PRAVO-BOK
+      KROK
+      KDYŽ NENÍ ZEÏ
+         V-PRAVO-BOK
+         PEXESO-KE-ZDI
+         VLEVO-VBOK
+         KROK
+      KONEC, JINAK
+      KONEC
+   KONEC
+   DOMÙ
+KONEC		; Konec definice pøíkazu PEXESO
+
+PEXESO-KE-ZDI		; Nový pøíkaz
+   KROK
+   DOKUD NENÍ ZEÏ
+      DOKUD JE ZNAÈKA
+         ZVEDNI
+      KONEC
+      OPAKUJ 8-KRÁT
+         POLOŽ
+      KONEC
+      KROK
+   KONEC
+KONEC		; Konec definice pøíkazu PEXESO-KE-ZDI
+
+TEST		; Nový pøíkaz
+   DOKUD NENÍ DOMOV
+      DOMÙ
+      LUX
+      DOMÙ
+      KEBEREC
+      DOMÙ
+      LUX
+      DOMÙ
+      PEXESO
+   KONEC
+KONEC		; Konec definice pøíkazu TEST
+
+; Mìsto projektu Karel 99
+;
+; Velikost mìsta: x, y
+; Pozice Karla: x, y
+; Otoèení Karla: SEVER, JIH, ZÁPAD nebo VÝCHOD
+; Umístìní domova: x, y
+
+Velikost mìsta: 20, 20
+Pozice Karla: 1, 20
+Otoèení Karla: VÝCHOD
+Umístìní domova: 3, 7
+
+; Definice mìsta:
+;   .    prázdné místo
+;   1-8  poèet položených znaèek
+;   X    zeï
+
+Definice mìsta:
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+
+; Konec definice mìsta
+
