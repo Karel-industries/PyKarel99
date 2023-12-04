@@ -1,23 +1,29 @@
 #!/bin/python3.10
 
+import ctypes
 import pygame
 import time
 import threading
 import os, sys
-import getopt
 import serial
 from pprint import pprint
 
 
 class Config:
-    size = 20
+    size = [20, 20]  # default is 20x20
     screen_size = 600
-    interval = 0  # ms
-    flags_are_numbers = True  # True or False
+    interval = 100  # ms
+    fps_cap = 0
+    flags_are_numbers = False  # True or False
+    use_diferent_karel = False  # True or False
+    just_use_simple_colors = False  # True or False
+
     ignore_out_of_screen = True
 
+    use_KVM = True
+
     save_translated_file_as_utf8 = True
-    default_file = "KPU"  # Can be without .K99 extension
+    default_file = "mainutf8"  # Can be without .K99 extension
     default_func = "TEST"
     # default_file = ""   # Can be without .K99 extension
     # default_func = ""
@@ -31,10 +37,10 @@ class Karel:
     stop_code = False
 
     x = 0
-    y = Config.size - 1  # 19
+    y = Config.size[1] - 1  # 19
 
     home_x = 0
-    home_y = Config.size - 1
+    home_y = Config.size[1] - 1
 
     # 0 = up            [North]     Sever
     # 1 = left  (<-)    [WEST]      Západ
@@ -83,12 +89,14 @@ class MapStorage:
     # W   = wall
 
     def init():
-        MapStorage.map = [["0" for _ in range(Config.size)] for _ in range(Config.size)]
+        MapStorage.map = [
+            ["0" for _ in range(Config.size[0])] for _ in range(Config.size[1])
+        ]
 
     def valid_pos(pos):
-        if pos[0] < 0 or pos[0] > Config.size - 1:
+        if pos[0] < 0 or pos[0] > Config.size[0] - 1:
             return False
-        if pos[1] < 0 or pos[1] > Config.size - 1:
+        if pos[1] < 0 or pos[1] > Config.size[1] - 1:
             return False
         return True
 
@@ -146,7 +154,7 @@ class Functions:
 
 
 class Screen:
-    SQUARE_SIZE = Config.screen_size / Config.size
+    SQUARE_SIZE = Config.screen_size / max(Config.size)
     screen = pygame.display.set_mode((Config.screen_size, Config.screen_size))
     clock = pygame.time.Clock()
 
@@ -155,6 +163,7 @@ class Screen:
             if event.type == pygame.QUIT:
                 Karel.stop_code = True
                 Karel.running_gui = False
+                quit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     Karel.stop_code = True
@@ -164,20 +173,51 @@ class Screen:
 
         Screen.screen.fill((180, 180, 180))
 
-        # Draw the grid and squares
-        for y in range(Config.size):
-            for x in range(Config.size):
-                if MapStorage.map[x][y] == "W":
-                    Screen.screen.blit(
-                        Images.WALL, (x * Screen.SQUARE_SIZE, y * Screen.SQUARE_SIZE)
-                    )
+        if Config.just_use_simple_colors:
+            # Draw the grid and squares
+            for y in range(Config.size[1]):
+                for x in range(Config.size[0]):
+                    if MapStorage.map[x][y] == "W":
+                        color = SimpleColors.WALL
+                    elif Karel.home_x == x and Karel.home_y == y:
+                        color = (
+                            min(
+                                (
+                                    (
+                                        SimpleColors.FLAGS[int(MapStorage.map[x][y])][0]
+                                        + SimpleColors.HOME[0]
+                                    )
+                                    / 2
+                                ),
+                                255,
+                            ),
+                            min(
+                                (
+                                    (
+                                        SimpleColors.FLAGS[int(MapStorage.map[x][y])][1]
+                                        + SimpleColors.HOME[1]
+                                    )
+                                    / 2
+                                ),
+                                255,
+                            ),
+                            min(
+                                (
+                                    (
+                                        SimpleColors.FLAGS[int(MapStorage.map[x][y])][2]
+                                        + SimpleColors.HOME[2]
+                                    )
+                                    / 2
+                                ),
+                                255,
+                            ),
+                        )
+                    else:
+                        color = SimpleColors.FLAGS[int(MapStorage.map[x][y])]
 
-                elif MapStorage.map[x][y] == "0":
-                    if (x + y) % 2 == 0:
-                        continue
                     pygame.draw.rect(
                         Screen.screen,
-                        (200, 200, 200),
+                        color,
                         (
                             x * Screen.SQUARE_SIZE,
                             y * Screen.SQUARE_SIZE,
@@ -185,20 +225,137 @@ class Screen:
                             Screen.SQUARE_SIZE,
                         ),
                     )
-                else:
-                    Screen.screen.blit(
-                        Images.FLAGS[int(MapStorage.map[x][y])],
-                        (x * Screen.SQUARE_SIZE, y * Screen.SQUARE_SIZE),
-                    )
 
-        Screen.screen.blit(
-            Images.HOME,
-            (Karel.home_x * Screen.SQUARE_SIZE, Karel.home_y * Screen.SQUARE_SIZE),
-        )
-        Screen.screen.blit(
-            Images.KAREL[Karel.dir],
-            (Karel.x * Screen.SQUARE_SIZE, Karel.y * Screen.SQUARE_SIZE),
-        )
+            if Karel.home_x == Karel.x and Karel.home_y == Karel.y:
+                color = (
+                    min(
+                        (
+                            (
+                                SimpleColors.FLAGS[
+                                    int(MapStorage.map[Karel.x][Karel.y])
+                                ][0]
+                                + SimpleColors.KAREL[Karel.dir][0]
+                                + SimpleColors.HOME[0]
+                            )
+                            / 2
+                        ),
+                        255,
+                    ),
+                    min(
+                        (
+                            (
+                                SimpleColors.FLAGS[
+                                    int(MapStorage.map[Karel.x][Karel.y])
+                                ][1]
+                                + SimpleColors.KAREL[Karel.dir][1]
+                                + SimpleColors.HOME[1]
+                            )
+                            / 2
+                        ),
+                        255,
+                    ),
+                    min(
+                        (
+                            (
+                                SimpleColors.FLAGS[
+                                    int(MapStorage.map[Karel.x][Karel.y])
+                                ][2]
+                                + SimpleColors.KAREL[Karel.dir][2]
+                                + SimpleColors.HOME[2]
+                            )
+                            / 2
+                        ),
+                        255,
+                    ),
+                )
+            else:
+                color = (
+                    min(
+                        (
+                            (
+                                SimpleColors.FLAGS[
+                                    int(MapStorage.map[Karel.x][Karel.y])
+                                ][0]
+                                + SimpleColors.KAREL[Karel.dir][0]
+                            )
+                            / 2
+                        ),
+                        255,
+                    ),
+                    min(
+                        (
+                            (
+                                SimpleColors.FLAGS[
+                                    int(MapStorage.map[Karel.x][Karel.y])
+                                ][1]
+                                + SimpleColors.KAREL[Karel.dir][1]
+                            )
+                            / 2
+                        ),
+                        255,
+                    ),
+                    min(
+                        (
+                            (
+                                SimpleColors.FLAGS[
+                                    int(MapStorage.map[Karel.x][Karel.y])
+                                ][2]
+                                + SimpleColors.KAREL[Karel.dir][2]
+                            )
+                            / 2
+                        ),
+                        255,
+                    ),
+                )
+
+            pygame.draw.rect(
+                Screen.screen,
+                color,
+                (
+                    Karel.x * Screen.SQUARE_SIZE,
+                    Karel.y * Screen.SQUARE_SIZE,
+                    Screen.SQUARE_SIZE,
+                    Screen.SQUARE_SIZE,
+                ),
+            )
+
+        else:
+            # Draw the grid and squares
+            for y in range(Config.size[1]):
+                for x in range(Config.size[0]):
+                    if MapStorage.map[x][y] == "W":
+                        Screen.screen.blit(
+                            Images.WALL,
+                            (x * Screen.SQUARE_SIZE, y * Screen.SQUARE_SIZE),
+                        )
+
+                    elif MapStorage.map[x][y] == "0":
+                        if (x + y) % 2 == 0:
+                            continue
+                        pygame.draw.rect(
+                            Screen.screen,
+                            (200, 200, 200),
+                            (
+                                x * Screen.SQUARE_SIZE,
+                                y * Screen.SQUARE_SIZE,
+                                Screen.SQUARE_SIZE,
+                                Screen.SQUARE_SIZE,
+                            ),
+                        )
+                    else:
+                        Screen.screen.blit(
+                            Images.FLAGS[int(MapStorage.map[x][y])],
+                            (x * Screen.SQUARE_SIZE, y * Screen.SQUARE_SIZE),
+                        )
+
+            Screen.screen.blit(
+                Images.HOME,
+                (Karel.home_x * Screen.SQUARE_SIZE, Karel.home_y * Screen.SQUARE_SIZE),
+            )
+            Screen.screen.blit(
+                Images.KAREL[Karel.dir],
+                (Karel.x * Screen.SQUARE_SIZE, Karel.y * Screen.SQUARE_SIZE),
+            )
 
         pygame.display.flip()
 
@@ -221,7 +378,7 @@ class Code:
                     .replace("\t", "")
                 )
             )
-        
+
         # Translate to english
         in_code = ungibrished_code
         translated_code = []
@@ -244,12 +401,26 @@ class Code:
 
             if not tmp_line == "":
                 uncomented_code.append(tmp_line)
-        
+
         return (translated_code, uncomented_code)
 
+    def save_as_utf8(file_path):
+        if Config.save_translated_file_as_utf8:
+            if "utf8" in file_path:
+                path = file_path
+            else:
+                path = file_path.replace(".K99", "utf8.K99")
+            with open(path, "w") as f:
+                for line in Code.code:
+                    f.write(line + "\n")
+
     def load(file_path):
-        with open(file_path, "r", encoding="iso_8859_2") as f:
-            Code.commented_code, Code.code = Code.format_code(f.readlines())
+        if "utf8" in file_path:
+            with open(file_path, "r") as f:
+                Code.commented_code, Code.code = Code.format_code(f.readlines())
+        else:
+            with open(file_path, "r", encoding="iso_8859_2") as f:
+                Code.commented_code, Code.code = Code.format_code(f.readlines())
 
         for index, string in enumerate(Code.code):
             if "Map size" in string:
@@ -275,18 +446,7 @@ class Code:
 
                 Code.function_definitions[function_name] = function_definition
 
-
-        # Save translate file as utf8
-
-        if Config.save_translated_file_as_utf8:
-            if "utf8" in file_path:
-                path = file_path
-            else:
-                path = file_path.replace(".K99", "utf8.K99")
-
-            with open(path, "w") as f:
-                for line in Code.commented_code:
-                    f.write(line + "\n")
+        Code.save_as_utf8(file_path)
 
         # Load data from code
 
@@ -298,6 +458,8 @@ class Code:
 
         map_size_raw = Code.code[first_index].replace("Map size: ", "").split(", ")
         map_size = [int(map_size_raw[0]), int(map_size_raw[1])]
+
+        Config.size = map_size
 
         # Karel pos
         karel_pos_raw = (
@@ -321,22 +483,18 @@ class Code:
 
         # Map
         tmp_map = []
-        for i in range(map_size[1]):
+        for i in range(Config.size[1]):
             "".split()
             tmp_map.append(list(Code.code[first_index + 5 + i]))
 
-        for y in range(Config.size):
-            for x in range(Config.size):
-                if x < map_size[0] and y < map_size[1]:
-                    if tmp_map[y][x] == ".":
-                        MapStorage.map[x][y] = "0"
-                    elif tmp_map[y][x] == "X":
-                        MapStorage.map[x][y] = "W"
-                    elif tmp_map[y][x] in ["1", "2", "3", "4", "5", "6", "7", "8"]:
-                        MapStorage.map[x][y] = tmp_map[y][x]
-                else:
-                    if not Config.ignore_out_of_screen:
-                        MapStorage.map[x][y] = "W"  # if the map is smaller, put walls
+        for y in range(Config.size[1]):
+            for x in range(Config.size[0]):
+                if tmp_map[y][x] == ".":
+                    MapStorage.map[x][y] = "0"
+                elif tmp_map[y][x] == "X":
+                    MapStorage.map[x][y] = "W"
+                elif tmp_map[y][x] in ["1", "2", "3", "4", "5", "6", "7", "8"]:
+                    MapStorage.map[x][y] = tmp_map[y][x]
 
     def run(func_name):
         if Karel.running_gui:
@@ -470,6 +628,61 @@ class Code:
             index += 1
 
 
+class KVM:
+    lib = None
+
+    def init():
+        print("\nInitializing KVM")
+        os.system(
+            "mkdir -p KVM && cd KVM && git submodule update --init --remote --rebase && cd KVM && zig build -Doptimize=ReleaseFast"
+        )
+        if os.path.exists("KVM/KVM/zig-out/lib/libKvm.so"):  # LINUX
+            os.system("cp KVM/KVM/zig-out/lib/libKvm.so KVM/")
+            os.system("mv KVM/libKvm.so KVM/kvmlib")
+        elif os.path.exists("KVM/KVM/zig-out/lib/Kvm.dll"):  # WINDOWS
+            os.system("cp KVM/KVM/zig-out/lib/Kvm.dll KVM/")
+            os.system("mv KVM/Kvm.dll KVM/kvmlib")
+        elif os.path.exists("KVM/KVM/zig-out/lib/libKvm.dylib"):  # WINDOWS
+            os.system("cp KVM/KVM/zig-out/lib/libKvm.dylib KVM/")
+            os.system("mv KVM/libKvm.dylib KVM/kvmlib")
+        else:
+            print(
+                "I tried to make it for this os and it looks i failed, btw this is in the part that loads the KVM"
+            )
+            quit()
+
+        KVM.lib = ctypes.CDLL("KVM/kvmlib")
+
+        KVM.lib.init()
+
+    def deinit():
+        if Config.use_KVM:
+            KVM.lib.deinit()
+
+    def save_code():
+        with open("KVM/code.kl", "w") as f:
+            for line in Code.code:
+                if "Map size" in line:
+                    break
+                f.write(line + "\n")
+
+    def save_map():
+        with open("KVM/code.km", "w") as f:
+            f.write(f"{Config.size[0]},{Config.size[1]};")
+            for y in range(Config.size[1]):
+                for x in range(Config.size[0]):
+                    f.write(MapStorage.map[x][y])
+
+    def load():
+        KVM.lib.load("KVM/code.kl".encode("utf-8"))
+
+    def load_world():
+        KVM.lib.load_world()
+
+    def run_func(func_name):
+        KVM.lib.run_symbol(func_name.encode("utf-8"))
+
+
 class Images:
     ICON = pygame.image.load("assets/icon.png")
 
@@ -481,24 +694,44 @@ class Images:
         pygame.image.load("assets/home.png"), (Screen.SQUARE_SIZE, Screen.SQUARE_SIZE)
     )
 
-    KAREL = [
-        pygame.transform.scale(
-            pygame.image.load("assets/karel-0.png"),
-            (Screen.SQUARE_SIZE, Screen.SQUARE_SIZE),
-        ),
-        pygame.transform.scale(
-            pygame.image.load("assets/karel-1.png"),
-            (Screen.SQUARE_SIZE, Screen.SQUARE_SIZE),
-        ),
-        pygame.transform.scale(
-            pygame.image.load("assets/karel-2.png"),
-            (Screen.SQUARE_SIZE, Screen.SQUARE_SIZE),
-        ),
-        pygame.transform.scale(
-            pygame.image.load("assets/karel-3.png"),
-            (Screen.SQUARE_SIZE, Screen.SQUARE_SIZE),
-        ),
-    ]
+    if Config.use_diferent_karel:
+        KAREL = [
+            pygame.transform.scale(
+                pygame.image.load("assets/different-karel/karel-0.png"),
+                (Screen.SQUARE_SIZE, Screen.SQUARE_SIZE),
+            ),
+            pygame.transform.scale(
+                pygame.image.load("assets/different-karel/karel-1.png"),
+                (Screen.SQUARE_SIZE, Screen.SQUARE_SIZE),
+            ),
+            pygame.transform.scale(
+                pygame.image.load("assets/different-karel/karel-2.png"),
+                (Screen.SQUARE_SIZE, Screen.SQUARE_SIZE),
+            ),
+            pygame.transform.scale(
+                pygame.image.load("assets/different-karel/karel-3.png"),
+                (Screen.SQUARE_SIZE, Screen.SQUARE_SIZE),
+            ),
+        ]
+    else:
+        KAREL = [
+            pygame.transform.scale(
+                pygame.image.load("assets/karel-0.png"),
+                (Screen.SQUARE_SIZE, Screen.SQUARE_SIZE),
+            ),
+            pygame.transform.scale(
+                pygame.image.load("assets/karel-1.png"),
+                (Screen.SQUARE_SIZE, Screen.SQUARE_SIZE),
+            ),
+            pygame.transform.scale(
+                pygame.image.load("assets/karel-2.png"),
+                (Screen.SQUARE_SIZE, Screen.SQUARE_SIZE),
+            ),
+            pygame.transform.scale(
+                pygame.image.load("assets/karel-3.png"),
+                (Screen.SQUARE_SIZE, Screen.SQUARE_SIZE),
+            ),
+        ]
 
     if Config.flags_are_numbers:
         FLAGS = [
@@ -580,6 +813,23 @@ class Images:
         ]
 
 
+class SimpleColors:
+    WALL = (255, 0, 0)
+    HOME = (0, 0, 255)
+    KAREL = [(128, 255, 0), (170, 213, 0), (213, 170, 0), (255, 128, 0)]
+    FLAGS = [
+        (128, 128, 128),
+        (213, 61, 79),
+        (244, 109, 67),
+        (253, 174, 97),
+        (254, 224, 139),
+        (230, 245, 152),
+        (171, 221, 164),
+        (102, 194, 165),
+        (50, 136, 189),
+    ]
+
+
 MapStorage.init()
 
 IF_LIST = {
@@ -617,8 +867,14 @@ ALIASES = {
     "Otočení Karla": "Karel rotation",
     "Umístění domova": "Home position",
     "Definice města": "Map definition",
-    "VYTISKNI" : "PRINT",
+    "VYTISKNI": "PRINT",  # added feature
 }
+
+
+def quit():
+    KVM.deinit()
+    pygame.quit()
+    exit()
 
 
 def handle_esp(func_name):
@@ -652,13 +908,12 @@ def main_loop():
     pygame.display.set_caption("PyKarel 99")
     while Karel.running_gui:
         try:
-            Screen.clock.tick()
+            Screen.clock.tick(Config.fps_cap)
             Screen.draw_frame()
         except KeyboardInterrupt:
             print("\n\033[01m\n\033[91mExited\033[00m\n")
             Karel.running_gui = False
-    pygame.quit()
-    sys.exit()
+    quit()
 
 
 def ask_user():
@@ -682,10 +937,12 @@ def ask_user():
         print("\033[31mFile does not exist!\033[0m")
         print()
         Karel.running_gui = False
-        exit()
+        quit()
 
     if Karel.running_gui:
         Code.load(file_name)
+        if Config.use_KVM:
+            KVM.load()
 
     last_func_name = ""
     while Karel.running_gui:
@@ -706,39 +963,44 @@ def ask_user():
 
         last_func_name = func_name
 
-        if not Config.EspKarelMode:
-            Code.run(func_name)
-        else:
+        if Config.use_KVM:
+            KVM.run_func(func_name)
+        elif Config.EspKarelMode:
             handle_esp(func_name)
+        else:
+            Code.run(func_name)
 
         print("\033[01m\n\033[91mStopped\033[00m\n")
 
 
-def handle_args(argv):
-    opts, args = getopt.getopt(argv, "h:f:F:i:n")
-
-    for opt, arg in opts:
-        if opt == "-h":
-            print()
-            print(
-                "PyKarel99.py  -f <File>  -F <Function to run>  -i <Interval>  -n <Flags are numbers>"
-            )
-            print()
-            sys.exit()
-        elif opt in ("-f"):
-            Config.default_file = arg
-        elif opt in ("-F"):
-            Config.default_func = arg
-        elif opt in ("-i"):
-            Config.interval = int(arg)
-
-
 def main():
-    handle_args(sys.argv[1:])
+    if Config.use_KVM:
+        KVM.init()
+
+        Code.load("mainutf8.K99")
+
+        print("\nLoading code and world")
+
+        KVM.save_code()
+        KVM.save_map()
+
+        KVM.load()
+        KVM.load_world()
+
+        print("\nRunning func")
+
+        KVM.run_func("TEST")
+
+        time.sleep(1)
+
+        quit()
+
+    # handle_args(sys.argv[1:])
     t1 = threading.Thread(target=ask_user, args=())
     t1.start()
 
     main_loop()
+
 
 if __name__ == "__main__":
     main()

@@ -12,10 +12,10 @@ python PyKarel99.py -f <File> -F <Function to run> -i <Interval> -n <Flags are n
 Press ESC to exit the program
 Press Q to stop program execution
 
-# Added Functions
+# Added Functions *TODO*
 ```PRINT``` or ```VYTISKNOUT``` to print a string to console
 usage ```PRINT Hello World!``` will print "Hello World!" to console
 
 
 # Shoutout
-Every .K99 file except main.K99 is made by [@caszual] (https://www.github.com/caszual)
+Every .K99 file except main.K99 is made by [@caszual](https://www.github.com/caszual)
