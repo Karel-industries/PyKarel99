@@ -632,26 +632,21 @@ class KVM:
     lib = None
 
     def init():
-        print("\nInitializing KVM")
+        print("\nLoading KVM")
         os.system(
             "mkdir -p KVM && cd KVM && git submodule update --init --remote --rebase && cd KVM && zig build -Doptimize=ReleaseFast"
         )
         if os.path.exists("KVM/KVM/zig-out/lib/libKvm.so"):  # LINUX
-            os.system("cp KVM/KVM/zig-out/lib/libKvm.so KVM/")
-            os.system("mv KVM/libKvm.so KVM/kvmlib")
+            KVM.lib = ctypes.CDLL("KVM/KVM/zig-out/lib/libKvm.so")
         elif os.path.exists("KVM/KVM/zig-out/lib/Kvm.dll"):  # WINDOWS
-            os.system("cp KVM/KVM/zig-out/lib/Kvm.dll KVM/")
-            os.system("mv KVM/Kvm.dll KVM/kvmlib")
-        elif os.path.exists("KVM/KVM/zig-out/lib/libKvm.dylib"):  # WINDOWS
-            os.system("cp KVM/KVM/zig-out/lib/libKvm.dylib KVM/")
-            os.system("mv KVM/libKvm.dylib KVM/kvmlib")
+            KVM.lib = ctypes.CDLL("KVM/KVM/zig-out/lib/Kvm.dll")
+        elif os.path.exists("KVM/KVM/zig-out/lib/libKvm.dylib"):  # OSX
+            KVM.lib = ctypes.CDLL("KVM/KVM/zig-out/lib/libKvm.dylib")
         else:
             print(
                 "I tried to make it for this os and it looks i failed, btw this is in the part that loads the KVM"
             )
             quit()
-
-        KVM.lib = ctypes.CDLL("KVM/kvmlib")
 
         KVM.lib.init()
 
@@ -678,6 +673,9 @@ class KVM:
 
     def load_world():
         KVM.lib.load_world()
+
+    def stop():
+        KVM.lib.short_circuit()
 
     def run_func(func_name):
         KVM.lib.run_symbol(func_name.encode("utf-8"))
