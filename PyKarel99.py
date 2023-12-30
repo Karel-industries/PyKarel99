@@ -513,28 +513,28 @@ class Code:
         while index < len(func_list):
             if Karel.stop_code == True:
                 return
-            line = func_list[index]
-            if "STEP" in line:
+            line = func_list[index].replace("   ", "")
+            if line.startswith("STEP"):
                 Functions.Step()
                 if not Config.interval == 0:
                     time.sleep(Config.interval / 1000)
-            elif "LEFT" in line:
+            elif line.startswith("LEFT"):
                 Functions.Turn_left()
                 if not Config.interval == 0:
                     time.sleep(Config.interval / 1000)
-            elif "PICK" in line:
+            elif line.startswith("PICK"):
                 Functions.Pick_flag()
                 if not Config.interval == 0:
                     time.sleep(Config.interval / 1000)
-            elif "PLACE" in line:
+            elif line.startswith("PLACE"):
                 Functions.Place_flag()
                 if not Config.interval == 0:
                     time.sleep(Config.interval / 1000)
-            elif "UNTIL" in line:
+            elif line.startswith("UNTIL"):
                 tab_count = func_list[0].count("   ")
                 tmp_index = int(index + 1)
                 tmp_code = []
-                conditions = line.replace("   ", "").replace("UNTIL ", "").split(" ")
+                conditions = line.replace("UNTIL ", "").split(" ")
                 while True:
                     if func_list[tmp_index] == str(str("   " * tab_count) + "END"):
                         break
@@ -553,12 +553,12 @@ class Code:
                     while not IF_LIST[conditions[1]]() and Karel.stop_code == False:
                         Code.run_func_list(tmp_code)
 
-            elif "IF IS" in line:
+            elif line.startswith("IF IS"):
                 tab_count = func_list[0].count("   ")
                 tmp_index = int(index + 1)
                 if_tmp_code = []
                 else_tmp_code = []
-                conditions = line.replace("   ", "").replace("IF ", "").split(" ")
+                conditions = line.replace("IF ", "").split(" ")
                 while True:
                     if func_list[tmp_index] == str(
                         str("   " * tab_count) + "END, ELSE"
@@ -590,7 +590,7 @@ class Code:
                     else:
                         Code.run_func_list(else_tmp_code)
 
-            elif "REPEAT" in line:
+            elif line.startswith("REPEAT"):
                 tab_count = func_list[0].count("   ")
                 tmp_index = int(index + 1)
                 tmp_code = []
@@ -607,7 +607,7 @@ class Code:
 
                 for _ in range(
                     int(
-                        line.replace("   ", "")
+                        line
                         .replace("REPEAT", "")
                         .replace("-TIMES", "")
                     )
@@ -616,14 +616,17 @@ class Code:
                         return
                     Code.run_func_list(tmp_code)
 
-            elif "PRINT" in line:
-                print(line.replace("   ", "").replace("PRINT ", ""))
-            elif "END" in line:  # just to be safe, but not used (hopefully)
+            elif line.startswith("PRINT"):
+                print(line.replace("PRINT ", ""))
+            elif line.startswith("END"):  # just to be safe, but not used (hopefully)
                 pass
             else:
-                Code.run_func_list(
-                    Code.function_definitions[line.replace("   ", "")]
-                )  # recursive
+                try:
+                    Code.run_func_list(
+                        Code.function_definitions[line]
+                    )  # recursive
+                except KeyError:
+                    pass # missing funcs are interpreted as no-ops
 
             index += 1
 
