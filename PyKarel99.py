@@ -643,6 +643,9 @@ class Code:
 class KVM:
     lib = None
 
+    # used to stop updating PyKarels map with Kvms map when loading a new map into Kvm
+    update_freeze = True
+
     def init():
         print("\nLoading KVM")
         os.system(
@@ -666,13 +669,6 @@ class KVM:
         if Config.use_KVM:
             KVM.lib.deinit()
 
-    def save_map():
-        with open("KVM/code.km", "w") as f:
-            f.write(f"{Config.size[0]},{Config.size[1]};")
-            for y in range(Config.size[1]):
-                for x in range(Config.size[0]):
-                    f.write(MapStorage.map[x][y])
-
     def load():
         src = ""
 
@@ -684,29 +680,44 @@ class KVM:
         KVM.lib.load(src.encode("utf-8"))
 
     def load_world():
-        KVM.lib.load_world()
-
-    def update():
-        # a little ctypes shenanigans to read world data from KVM
-        buffer_type = ctypes.c_byte * (Config.size[0] * Config.size[1])
-        map_buffer = buffer_type()
-
-        KVM.lib.read_world(ctypes.pointer(map_buffer))
+        map_buffer_type = ctypes.c_ubyte * (Config.size[0] * Config.size[1])
+        map_buffer = map_buffer_type()
 
         i = 0
-
-        for y in range(Config.size[1]):
+        for y in range(Config.size[1] - 1, 0, -1): # KVM has a flipped y axis compared to PyKarel
             for x in range(Config.size[0]):
-                MapStorage.map[x][y] = str(map_buffer[i])
+                map_buffer[i] = 255 if MapStorage.map[x][y] == "W" else int(MapStorage.map[x][y])
                 i += 1
+
+        karel_buffer_type = ctypes.c_uint * 5
+        karel_buffer = karel_buffer_type(Karel.x, Config.size[1] - 1 - Karel.y, Karel.dir, Karel.home_x, Config.size[1] - 1 - Karel.home_y) # y axis flip
+
+        KVM.lib.load_world(ctypes.pointer(map_buffer), ctypes.pointer(karel_buffer))
+
+    def update():
+        if KVM.update_freeze:
+            return
+
+        # a little ctypes shenanigans to read world data from KVM
+        map_buffer_type = ctypes.c_ubyte * (Config.size[0] * Config.size[1])
+        map_buffer = map_buffer_type()
 
         karel_buffer_type = ctypes.c_uint * 5
         karel_buffer = karel_buffer_type()
 
-        KVM.lib.read_karel(ctypes.pointer(karel_buffer))
+        KVM.lib.read_world(ctypes.pointer(map_buffer), ctypes.pointer(karel_buffer))
+
+        i = 0
+        for y in range(Config.size[1] - 1, 0, -1): # KVM has a flipped y axis compared to PyKarel
+            for x in range(Config.size[0]):
+                if not map_buffer[i] == 255:
+                    MapStorage.map[x][y] = str(map_buffer[i])
+                else:
+                    MapStorage.map[x][y] = str("W")
+                i += 1
 
         Karel.x = int(karel_buffer[0])
-        Karel.y = int(karel_buffer[1])
+        Karel.y = int(Config.size[1] - 1 - karel_buffer[1]) # y axis flip
 
         Karel.dir = int(karel_buffer[2])
 
@@ -976,7 +987,10 @@ def ask_user():
     if Karel.running_gui:
         Code.load(file_name)
         if Config.use_KVM:
+            KVM.load_world()
             KVM.load()
+
+            KVM.update_freeze = False
 
     last_func_name = ""
     while Karel.running_gui:
@@ -1011,7 +1025,6 @@ def ask_user():
 def main():
     if Config.use_KVM:
         KVM.init()
-        KVM.load_world()
 
     # handle_args(sys.argv[1:])
     t1 = threading.Thread(target=ask_user, args=())
