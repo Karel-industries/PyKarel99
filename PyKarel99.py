@@ -162,14 +162,23 @@ class Screen:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 Karel.stop_code = True
+                if Config.use_KVM:
+                    KVM.stop()
                 Karel.running_gui = False
                 quit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     Karel.stop_code = True
+                    if Config.use_KVM:
+                        KVM.stop()
                     Karel.running_gui = False
                 elif event.key == pygame.K_q:
                     Karel.stop_code = True
+                    if Config.use_KVM:
+                        KVM.stop()
+
+        if Config.use_KVM:
+            KVM.update()
 
         Screen.screen.fill((180, 180, 180))
 
@@ -637,7 +646,7 @@ class KVM:
     def init():
         print("\nLoading KVM")
         os.system(
-            "mkdir -p KVM && cd KVM && git submodule update --init --remote --rebase && cd KVM && zig build -Doptimize=ReleaseFast"
+            "mkdir -p KVM && cd KVM && git submodule update --init --remote --rebase && cd KVM && zig build -Doptimize=Debug"
         )
         if os.path.exists("KVM/KVM/zig-out/lib/libKvm.so"):  # LINUX
             KVM.lib = ctypes.CDLL("KVM/KVM/zig-out/lib/libKvm.so")
@@ -657,13 +666,6 @@ class KVM:
         if Config.use_KVM:
             KVM.lib.deinit()
 
-    def save_code():
-        with open("KVM/code.kl", "w") as f:
-            for line in Code.code:
-                if "Map size" in line:
-                    break
-                f.write(line + "\n")
-
     def save_map():
         with open("KVM/code.km", "w") as f:
             f.write(f"{Config.size[0]},{Config.size[1]};")
@@ -672,10 +674,41 @@ class KVM:
                     f.write(MapStorage.map[x][y])
 
     def load():
-        KVM.lib.load("KVM/code.kl".encode("utf-8"))
+        src = ""
+
+        for line in Code.code:
+            if "Map size" in line:
+                break
+            src += line + '\n'
+
+        KVM.lib.load(src.encode("utf-8"))
 
     def load_world():
         KVM.lib.load_world()
+
+    def update():
+        # a little ctypes shenanigans to read world data from KVM
+        buffer_type = ctypes.c_byte * (Config.size[0] * Config.size[1])
+        map_buffer = buffer_type()
+
+        KVM.lib.read_world(ctypes.pointer(map_buffer))
+
+        i = 0
+
+        for y in range(Config.size[1]):
+            for x in range(Config.size[0]):
+                MapStorage.map[x][y] = str(map_buffer[i])
+                i += 1
+
+        karel_buffer_type = ctypes.c_uint * 5
+        karel_buffer = karel_buffer_type()
+
+        KVM.lib.read_karel(ctypes.pointer(karel_buffer))
+
+        Karel.x = int(karel_buffer[0])
+        Karel.y = int(karel_buffer[1])
+
+        Karel.dir = int(karel_buffer[2])
 
     def stop():
         KVM.lib.short_circuit()
@@ -965,7 +998,8 @@ def ask_user():
         last_func_name = func_name
 
         if Config.use_KVM:
-            KVM.run_func(func_name)
+            if Karel.running_gui:
+                KVM.run_func(func_name)
         elif Config.EspKarelMode:
             handle_esp(func_name)
         else:
@@ -977,24 +1011,7 @@ def ask_user():
 def main():
     if Config.use_KVM:
         KVM.init()
-
-        Code.load("mainutf8.K99")
-
-        print("\nLoading code and world")
-
-        KVM.save_code()
-        KVM.save_map()
-
-        KVM.load()
         KVM.load_world()
-
-        print("\nRunning func")
-
-        KVM.run_func("TEST")
-
-        time.sleep(1)
-
-        quit()
 
     # handle_args(sys.argv[1:])
     t1 = threading.Thread(target=ask_user, args=())
