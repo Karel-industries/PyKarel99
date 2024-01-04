@@ -649,8 +649,9 @@ class KVM:
     def init():
         print("\nLoading KVM")
         os.system(
-            "mkdir -p KVM && cd KVM && git submodule update --init --remote --rebase && cd KVM && zig build -Doptimize=Debug"
+            "cd KVM && git submodule update --init --remote --rebase && cd KVM && zig build -Doptimize=Debug"
         )
+
         if os.path.exists("KVM/KVM/zig-out/lib/libKvm.so"):  # LINUX
             KVM.lib = ctypes.CDLL("KVM/KVM/zig-out/lib/libKvm.so")
         elif os.path.exists("KVM/KVM/zig-out/lib/Kvm.dll"):  # WINDOWS
@@ -684,7 +685,7 @@ class KVM:
         map_buffer = map_buffer_type()
 
         i = 0
-        for y in range(Config.size[1] - 1, 0, -1): # KVM has a flipped y axis compared to PyKarel
+        for y in range(Config.size[1] - 1, -1, -1): # KVM has a flipped y axis compared to PyKarel
             for x in range(Config.size[0]):
                 map_buffer[i] = 255 if MapStorage.map[x][y] == "W" else int(MapStorage.map[x][y])
                 i += 1
@@ -708,7 +709,7 @@ class KVM:
         KVM.lib.read_world(ctypes.pointer(map_buffer), ctypes.pointer(karel_buffer))
 
         i = 0
-        for y in range(Config.size[1] - 1, 0, -1): # KVM has a flipped y axis compared to PyKarel
+        for y in range(Config.size[1] - 1, -1, -1): # KVM has a flipped y axis compared to PyKarel
             for x in range(Config.size[0]):
                 if not map_buffer[i] == 255:
                     MapStorage.map[x][y] = str(map_buffer[i])
@@ -988,9 +989,9 @@ def ask_user():
         Code.load(file_name)
         if Config.use_KVM:
             KVM.load_world()
-            KVM.load()
-
             KVM.update_freeze = False
+
+            KVM.load()
 
     last_func_name = ""
     while Karel.running_gui:
