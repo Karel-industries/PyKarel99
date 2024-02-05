@@ -4,32 +4,33 @@ import ctypes
 import pygame
 import time
 import threading
-import os, sys
-import serial
+import os
+import platform
 from pprint import pprint
 
 
 class Config:
     size = [20, 20]  # default is 20x20
-    screen_size = 600
-    interval = 100  # ms
+    screen_size = 800
+    interval = 10  # ms
     fps_cap = 0
     flags_are_numbers = False  # True or False
     use_diferent_karel = False  # True or False
     just_use_simple_colors = False  # True or False
 
+    platform = platform.system()
+
     ignore_out_of_screen = True
 
-    use_KVM = True
+    use_KVM = False
 
-    save_translated_file_as_utf8 = True
-    default_file = "mainutf8"  # Can be without .K99 extension
-    default_func = "TEST"
+    KPU_mode = True
+    
+    save_translated_file_as_utf8 = False
+    default_file = "../../../Keap/asembly/KPUv1b.24-main"  # Can be without .K99 extension
+    default_func = "==BOOT=="
     # default_file = ""   # Can be without .K99 extension
     # default_func = ""
-
-    EspPort = "/dev/ttyACM0"  # For future emulator on a esp32
-    EspKarelMode = False
 
 
 class Karel:
@@ -155,8 +156,60 @@ class Functions:
 
 class Screen:
     SQUARE_SIZE = Config.screen_size / max(Config.size)
+
     screen = pygame.display.set_mode((Config.screen_size, Config.screen_size))
     clock = pygame.time.Clock()
+
+    border_width = 2
+    borders = []  # (x, y, rot, clr)
+
+    # generate borders:
+    def gen_borders():
+        for x in range(6):
+            Screen.borders.append((x, 0, 0, (255, 0, 0)))
+        for x in range(6):
+            Screen.borders.append((x, 1, 0, (255, 0, 0)))
+        for x in range(6):
+            Screen.borders.append((x, 2, 0, (255, 0, 0)))
+    
+        for x in range(3):
+            Screen.borders.append((x+6, 0, 0, (0, 255, 255)))
+        Screen.borders.append((6, 0, 1, (0, 255, 255)))
+        Screen.borders.append((9, 0, 1, (0, 255, 255)))
+    
+        for x in range(3):
+            Screen.borders.append((x+6, 1, 0, (0, 255, 0)))
+        for x in range(3):
+            Screen.borders.append((x+6, 2, 0, (0, 255, 0)))
+        Screen.borders.append((6, 1, 1, (0, 255, 0)))
+        Screen.borders.append((9, 1, 1, (0, 255, 0)))
+    
+        for x in range(11):
+            Screen.borders.append((x+9, 2, 0, (255, 0, 0)))
+    
+        for y in range(0, 18, 3):
+            for x in range(20):
+                Screen.borders.append((x, y+5, 0, (255, 0, 0)))
+    
+        for x in range(21):
+            for y in range(0, 18):
+                Screen.borders.append((x, y+2, 1, (255, 0, 0)))
+    
+        for y in range(2):
+            Screen.borders.append((0, y, 1, (255, 0, 0)))
+        for y in range(2):
+            Screen.borders.append((3, y, 1, (255, 0, 0)))
+    
+        for y in range(2):
+            Screen.borders.append((18, y, 1, (0, 0, 0)))
+    
+        Screen.borders.append((19, 0, 1, (0, 0, 255)))
+        Screen.borders.append((20, 0, 1, (0, 0, 255)))
+    
+        Screen.borders.append((19, 0, 0, (0, 0, 255)))
+        Screen.borders.append((19, 1, 0, (0, 0, 255)))
+    
+        Screen.borders.append((19, 1, 1, (0, 0, 0)))
 
     def draw_frame():
         for event in pygame.event.get():
@@ -193,7 +246,8 @@ class Screen:
                             min(
                                 (
                                     (
-                                        SimpleColors.FLAGS[int(MapStorage.map[x][y])][0]
+                                        SimpleColors.FLAGS[int(
+                                            MapStorage.map[x][y])][0]
                                         + SimpleColors.HOME[0]
                                     )
                                     / 2
@@ -203,7 +257,8 @@ class Screen:
                             min(
                                 (
                                     (
-                                        SimpleColors.FLAGS[int(MapStorage.map[x][y])][1]
+                                        SimpleColors.FLAGS[int(
+                                            MapStorage.map[x][y])][1]
                                         + SimpleColors.HOME[1]
                                     )
                                     / 2
@@ -213,7 +268,8 @@ class Screen:
                             min(
                                 (
                                     (
-                                        SimpleColors.FLAGS[int(MapStorage.map[x][y])][2]
+                                        SimpleColors.FLAGS[int(
+                                            MapStorage.map[x][y])][2]
                                         + SimpleColors.HOME[2]
                                     )
                                     / 2
@@ -329,6 +385,52 @@ class Screen:
             )
 
         else:
+            for y in range(Config.size[1]):
+                for x in range(Config.size[0]):
+                    if (x + y) % 2 == 0:
+                        color = (180, 180, 180)
+                    else:
+                        color = (200, 200, 200)
+
+                    pygame.draw.rect(
+                        Screen.screen,
+                        color,
+                        (
+                            x * Screen.SQUARE_SIZE,
+                            y * Screen.SQUARE_SIZE,
+                            Screen.SQUARE_SIZE,
+                            Screen.SQUARE_SIZE,
+                        ),
+                    )
+
+            if Config.KPU_mode:
+                for x, y, rot, color in Screen.borders:
+
+                    if rot == 0:
+                        pygame.draw.rect(
+                            Screen.screen,
+                            color,
+                            (
+                                x * Screen.SQUARE_SIZE,
+                                y * Screen.SQUARE_SIZE -
+                                        (Screen.border_width/2),
+                                Screen.SQUARE_SIZE,
+                                Screen.border_width,
+                            ),
+                        )
+                    else:
+                        pygame.draw.rect(
+                            Screen.screen,
+                            color,
+                            (
+                                x * Screen.SQUARE_SIZE -
+                                        (Screen.border_width/2),
+                                y * Screen.SQUARE_SIZE,
+                                Screen.border_width,
+                                Screen.SQUARE_SIZE,
+                            ),
+                        )
+
             # Draw the grid and squares
             for y in range(Config.size[1]):
                 for x in range(Config.size[0]):
@@ -339,18 +441,7 @@ class Screen:
                         )
 
                     elif MapStorage.map[x][y] == "0":
-                        if (x + y) % 2 == 0:
-                            continue
-                        pygame.draw.rect(
-                            Screen.screen,
-                            (200, 200, 200),
-                            (
-                                x * Screen.SQUARE_SIZE,
-                                y * Screen.SQUARE_SIZE,
-                                Screen.SQUARE_SIZE,
-                                Screen.SQUARE_SIZE,
-                            ),
-                        )
+                        pass
                     else:
                         Screen.screen.blit(
                             Images.FLAGS[int(MapStorage.map[x][y])],
@@ -359,7 +450,8 @@ class Screen:
 
             Screen.screen.blit(
                 Images.HOME,
-                (Karel.home_x * Screen.SQUARE_SIZE, Karel.home_y * Screen.SQUARE_SIZE),
+                (Karel.home_x * Screen.SQUARE_SIZE,
+                 Karel.home_y * Screen.SQUARE_SIZE),
             )
             Screen.screen.blit(
                 Images.KAREL[Karel.dir],
@@ -405,10 +497,12 @@ class Code:
             tmp_line = ""
             if in_code[i].count(";") > 0:
                 tmp_line = line[: line.index(";")]
+            elif in_code[i].count("//") > 0:
+                tmp_line = line[: line.index("//")]
             else:
                 tmp_line = line
 
-            if not tmp_line == "":
+            if not tmp_line == "" and not tmp_line == "   ":
                 uncomented_code.append(tmp_line)
 
         return (translated_code, uncomented_code)
@@ -424,12 +518,14 @@ class Code:
                     f.write(line + "\n")
 
     def load(file_path):
-        if "utf8" in file_path:
-            with open(file_path, "r") as f:
-                Code.commented_code, Code.code = Code.format_code(f.readlines())
-        else:
+        try:
+            with open(file_path, "r", encoding="utf-8") as f:
+                Code.commented_code, Code.code = Code.format_code(
+                    f.readlines())
+        except:
             with open(file_path, "r", encoding="iso_8859_2") as f:
-                Code.commented_code, Code.code = Code.format_code(f.readlines())
+                Code.commented_code, Code.code = Code.format_code(
+                    f.readlines())
 
         for index, string in enumerate(Code.code):
             if "Map size" in string:
@@ -451,35 +547,33 @@ class Code:
                     if Code.code[o].startswith("END"):
                         break
 
-                    function_definition.append(Code.code[o].replace("   ", "", 1))
-
+                    function_definition.append(
+                        Code.code[o].replace("   ", "", 1))
                 Code.function_definitions[function_name] = function_definition
+
 
         Code.save_as_utf8(file_path)
 
         # Load data from code
 
-        first_index = 0
-        for line in Code.code:
-            if line.startswith("Map size"):
-                first_index = int(Code.code.index(line))
-                break
-
-        map_size_raw = Code.code[first_index].replace("Map size: ", "").split(", ")
+        map_size_raw = Code.code[start_config_index].replace(
+            "Map size: ", "").split(", ")
         map_size = [int(map_size_raw[0]), int(map_size_raw[1])]
 
         Config.size = map_size
 
         # Karel pos
         karel_pos_raw = (
-            Code.code[first_index + 1].replace("Karel position: ", "").split(", ")
+            Code.code[start_config_index +
+                      1].replace("Karel position: ", "").split(", ")
         )
         Karel.x = int(karel_pos_raw[0]) - 1
         Karel.y = int(karel_pos_raw[1]) - 1
 
         # Karel home
         karel_home_pos_raw = (
-            Code.code[first_index + 3].replace("Home position: ", "").split(", ")
+            Code.code[start_config_index +
+                      3].replace("Home position: ", "").split(", ")
         )
         Karel.home_x = int(karel_home_pos_raw[0]) - 1
         Karel.home_y = int(karel_home_pos_raw[1]) - 1
@@ -487,14 +581,13 @@ class Code:
         # Karel rot
         rotations = ["NORTH", "WEST", "SOUTH", "EAST"]
         Karel.dir = rotations.index(
-            Code.code[first_index + 2].replace("Karel rotation: ", "")
+            Code.code[start_config_index + 2].replace("Karel rotation: ", "").replace(" ", "")
         )
 
         # Map
         tmp_map = []
         for i in range(Config.size[1]):
-            "".split()
-            tmp_map.append(list(Code.code[first_index + 5 + i]))
+            tmp_map.append(list(Code.code[start_config_index + 5 + i]))
 
         for y in range(Config.size[1]):
             for x in range(Config.size[0]):
@@ -635,7 +728,7 @@ class Code:
                         Code.function_definitions[line]
                     )  # recursive
                 except KeyError:
-                    pass # missing funcs are interpreted as no-ops
+                    pass  # missing funcs are interpreted as no-ops
 
             index += 1
 
@@ -648,21 +741,26 @@ class KVM:
 
     def init():
         print("\nLoading KVM")
-        os.system(
-            "cd KVM && git submodule update --init --remote --rebase && cd KVM && zig build -Doptimize=Debug"
-        )
-
-        if os.path.exists("KVM/KVM/zig-out/lib/libKvm.so"):  # LINUX
-            KVM.lib = ctypes.CDLL("KVM/KVM/zig-out/lib/libKvm.so")
-        elif os.path.exists("KVM/KVM/zig-out/lib/Kvm.dll"):  # WINDOWS
-            KVM.lib = ctypes.CDLL("KVM/KVM/zig-out/lib/Kvm.dll")
-        elif os.path.exists("KVM/KVM/zig-out/lib/libKvm.dylib"):  # OSX
-            KVM.lib = ctypes.CDLL("KVM/KVM/zig-out/lib/libKvm.dylib")
-        else:
-            print(
-                "I tried to make it for this os and it looks i failed, btw this is in the part that loads the KVM"
+        if Config.platform == "Windows":
+            os.system(
+                "cd KVM && git submodule update --init --remote --rebase && cd KVM && zig build -Doptimize=ReleaseFast && echo ' '"
             )
-            quit()
+            KVM.lib = ctypes.CDLL("KVM/KVM/zig-out/lib/Kvm.dll")
+        elif Config.platform == "Linux":
+            # print("LINBUX")
+            #os.system(
+            #    "cd KVM && git submodule update --init --remote --rebase && cd KVM && zig build -Doptimize=ReleaseFast"
+            #)
+            os.system(
+                "cd KVM && cd KVM && zig build -Doptimize=Debug"
+            )
+            KVM.lib = ctypes.CDLL("KVM/KVM/zig-out/lib/libKvm.so")
+        elif Config.platform == "Darwin":  # aka MacOS
+            print("Don't care about MacOS\n F*** you!")
+            return
+        else:
+            print("Fuck")
+            return
 
         KVM.lib.init()
 
@@ -685,15 +783,19 @@ class KVM:
         map_buffer = map_buffer_type()
 
         i = 0
-        for y in range(Config.size[1] - 1, -1, -1): # KVM has a flipped y axis compared to PyKarel
+        # KVM has a flipped y axis compared to PyKarel
+        for y in range(Config.size[1] - 1, -1, -1):
             for x in range(Config.size[0]):
-                map_buffer[i] = 255 if MapStorage.map[x][y] == "W" else int(MapStorage.map[x][y])
+                map_buffer[i] = 255 if MapStorage.map[x][y] == "W" else int(
+                    MapStorage.map[x][y])
                 i += 1
 
         karel_buffer_type = ctypes.c_uint * 5
-        karel_buffer = karel_buffer_type(Karel.x, Config.size[1] - 1 - Karel.y, Karel.dir, Karel.home_x, Config.size[1] - 1 - Karel.home_y) # y axis flip
+        karel_buffer = karel_buffer_type(
+            Karel.x, Config.size[1] - 1 - Karel.y, Karel.dir, Karel.home_x, Config.size[1] - 1 - Karel.home_y)  # y axis flip
 
-        KVM.lib.load_world(ctypes.pointer(map_buffer), ctypes.pointer(karel_buffer))
+        KVM.lib.load_world(ctypes.pointer(map_buffer),
+                           ctypes.pointer(karel_buffer))
 
     def update():
         if KVM.update_freeze:
@@ -706,10 +808,12 @@ class KVM:
         karel_buffer_type = ctypes.c_uint * 5
         karel_buffer = karel_buffer_type()
 
-        KVM.lib.read_world(ctypes.pointer(map_buffer), ctypes.pointer(karel_buffer))
+        KVM.lib.read_world(ctypes.pointer(map_buffer),
+                           ctypes.pointer(karel_buffer))
 
         i = 0
-        for y in range(Config.size[1] - 1, -1, -1): # KVM has a flipped y axis compared to PyKarel
+        # KVM has a flipped y axis compared to PyKarel
+        for y in range(Config.size[1] - 1, -1, -1):
             for x in range(Config.size[0]):
                 if not map_buffer[i] == 255:
                     MapStorage.map[x][y] = str(map_buffer[i])
@@ -718,7 +822,7 @@ class KVM:
                 i += 1
 
         Karel.x = int(karel_buffer[0])
-        Karel.y = int(Config.size[1] - 1 - karel_buffer[1]) # y axis flip
+        Karel.y = int(Config.size[1] - 1 - karel_buffer[1])  # y axis flip
 
         Karel.dir = int(karel_buffer[2])
 
@@ -733,11 +837,13 @@ class Images:
     ICON = pygame.image.load("assets/icon.png")
 
     WALL = pygame.transform.scale(
-        pygame.image.load("assets/wall.png"), (Screen.SQUARE_SIZE, Screen.SQUARE_SIZE)
+        pygame.image.load(
+            "assets/wall.png"), (Screen.SQUARE_SIZE, Screen.SQUARE_SIZE)
     )
 
     HOME = pygame.transform.scale(
-        pygame.image.load("assets/home.png"), (Screen.SQUARE_SIZE, Screen.SQUARE_SIZE)
+        pygame.image.load(
+            "assets/home.png"), (Screen.SQUARE_SIZE, Screen.SQUARE_SIZE)
     )
 
     if Config.use_diferent_karel:
@@ -913,7 +1019,6 @@ ALIASES = {
     "Otočení Karla": "Karel rotation",
     "Umístění domova": "Home position",
     "Definice města": "Map definition",
-    "VYTISKNI": "PRINT",  # added feature
 }
 
 
@@ -921,32 +1026,6 @@ def quit():
     KVM.deinit()
     pygame.quit()
     exit()
-
-
-def handle_esp(func_name):
-    data_to_send = []
-
-    for func in Code.function_definitions.keys():
-        function_line = ""
-        for line in Code.function_definitions[func]:
-            function_line += line + ";"
-
-        data_to_send.append(f"{func}:{function_line[:-1]}")
-
-    data_to_send.append(f"RUN:{func_name}")
-
-    pprint(data_to_send)
-
-    with serial.Serial(Config.EspPort, 115200) as ser:
-        for line in data_to_send:
-            line = line.replace("\n", "") + "\n"  # make sure that there is a newline
-            print(" -> " + line.replace("\n", ""))
-            ser.write(line.encode())
-            time.sleep(0.1)
-
-        while True:
-            line = ser.readline().decode().replace("\n", "")
-            print(f" <- {line}")
 
 
 def main_loop():
@@ -977,7 +1056,9 @@ def ask_user():
         file_name = Config.default_file
 
     if not ".K99" in file_name:
-        file_name = file_name + ".K99"
+        file_name = f"{file_name}.K99"
+    if not "scripts/" in file_name:
+        file_name = f"scripts/{file_name}"
 
     if not os.path.isfile(file_name):
         print("\033[31mFile does not exist!\033[0m")
@@ -1015,8 +1096,6 @@ def ask_user():
         if Config.use_KVM:
             if Karel.running_gui:
                 KVM.run_func(func_name)
-        elif Config.EspKarelMode:
-            handle_esp(func_name)
         else:
             Code.run(func_name)
 
@@ -1026,6 +1105,8 @@ def ask_user():
 def main():
     if Config.use_KVM:
         KVM.init()
+
+    Screen.gen_borders()
 
     # handle_args(sys.argv[1:])
     t1 = threading.Thread(target=ask_user, args=())
