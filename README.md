@@ -18,4 +18,4 @@ usage ```PRINT Hello World!``` will print "Hello World!" to console
 
 
 # Shoutout
-Every .K99 file except main.K99 is made by [@caszual](https://www.github.com/caszual)
+Every .K99 file except main.K99 is made by [@caszual](https://www.github.com/caszuu)
