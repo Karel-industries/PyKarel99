@@ -8,9 +8,8 @@ import os
 import platform
 from pprint import pprint
 
-
 class Config:
-    size = [49, 49]  # default is 20x20
+    size = [20, 20]  # default is 20x20
     screen_size = 800
     interval = 0  # ms
     fps_cap = 30
