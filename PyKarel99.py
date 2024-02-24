@@ -10,10 +10,10 @@ from pprint import pprint
 
 
 class Config:
-    size = [20, 20]  # default is 20x20
+    size = [49, 49]  # default is 20x20
     screen_size = 800
-    interval = 10  # ms
-    fps_cap = 0
+    interval = 0  # ms
+    fps_cap = 30
     flags_are_numbers = False  # True or False
     use_diferent_karel = False  # True or False
     just_use_simple_colors = False  # True or False
@@ -27,7 +27,7 @@ class Config:
     KPU_mode = True
     
     save_translated_file_as_utf8 = False
-    default_file = "../../../Keap/asembly/KPUv1b.24-main"  # Can be without .K99 extension
+    default_file = "../../../Kpu/Keap/asembly/KPU"  # Can be without .K99 extension
     default_func = "==BOOT=="
     # default_file = ""   # Can be without .K99 extension
     # default_func = ""
@@ -212,6 +212,7 @@ class Screen:
         Screen.borders.append((19, 1, 1, (0, 0, 0)))
 
     def draw_frame():
+        global prg_ctr
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 Karel.stop_code = True
@@ -457,6 +458,8 @@ class Screen:
                 Images.KAREL[Karel.dir],
                 (Karel.x * Screen.SQUARE_SIZE, Karel.y * Screen.SQUARE_SIZE),
             )
+
+        prg_ctr = 0
 
         pygame.display.flip()
 
@@ -747,12 +750,9 @@ class KVM:
             )
             KVM.lib = ctypes.CDLL("KVM/KVM/zig-out/lib/Kvm.dll")
         elif Config.platform == "Linux":
-            # print("LINBUX")
-            #os.system(
-            #    "cd KVM && git submodule update --init --remote --rebase && cd KVM && zig build -Doptimize=ReleaseFast"
-            #)
+            #print("LINUX")
             os.system(
-                "cd KVM && cd KVM && zig build -Doptimize=Debug"
+                "cd KVM && git submodule update --init --remote --rebase && cd KVM && zig build -Doptimize=ReleaseFast"
             )
             KVM.lib = ctypes.CDLL("KVM/KVM/zig-out/lib/libKvm.so")
         elif Config.platform == "Darwin":  # aka MacOS
